@@ -21,6 +21,8 @@ coverage
 # Vercel
 .vercel
 
+*.db
+
 # Build Outputs
 .next/
 out/

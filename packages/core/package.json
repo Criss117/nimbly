@@ -1,0 +1,61 @@
+{
+	"name": "@nimbly/core",
+	"version": "1.0.0",
+	"description": "",
+	"files": ["dist"],
+	"main": "./dist/cjs/index.cjs",
+	"module": "./dist/es/index.mjs",
+	"types": "./dist/es/index.d.ts",
+	"exports": {
+		"./clients": {
+			"import": {
+				"types": "./dist/es/clients/index.d.ts",
+				"default": "./dist/es/clients/index.mjs"
+			},
+			"require": {
+				"types": "./dist/cjs/clients/index.d.cts",
+				"default": "./dist/cjs/clients/index.cjs"
+			}
+		},
+		"./products": {
+			"import": {
+				"types": "./dist/es/products/index.d.ts",
+				"default": "./dist/es/products/index.mjs"
+			},
+			"require": {
+				"types": "./dist/cjs/products/index.d.cts",
+				"default": "./dist/cjs/products/index.cjs"
+			}
+		},
+		"./tickets": {
+			"import": {
+				"types": "./dist/es/tickets/index.d.ts",
+				"default": "./dist/es/tickets/index.mjs"
+			},
+			"require": {
+				"types": "./dist/cjs/tickets/index.d.cts",
+				"default": "./dist/cjs/tickets/index.cjs"
+			}
+		}
+	},
+	"scripts": {
+		"build": "bunchee",
+		"dev": "bunchee --watch",
+		"check-types": "tsc --noEmit"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@nimbly/db": "workspace:*",
+		"drizzle-orm": "0.44.3",
+		"zod": "4.0.5"
+	},
+	"devDependencies": {
+		"bunchee": "6.5.4",
+		"typescript": "5.8.3"
+	},
+	"bunchee": {
+		"format": "cjs,esm"
+	}
+}
