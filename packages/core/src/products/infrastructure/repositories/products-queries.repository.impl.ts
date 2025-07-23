@@ -9,6 +9,7 @@ import {
 	lte,
 	or,
 	sql,
+	type SQL,
 } from "drizzle-orm";
 import type DBClient from "@nimbly/db";
 import { schemas } from "@nimbly/db";
@@ -50,7 +51,20 @@ export class ProductsQueriesRepositoryImpl
 	}
 
 	public findMany(meta: FindManyProductsDto): Promise<ProductDetail[]> {
-		const { cursor, limit, searchQuery } = meta;
+		const { limit, searchQuery } = meta;
+
+		const filters: SQL[] = [];
+
+		meta.cursor &&
+			filters.push(
+				or(
+					lte(products.createdAt, meta.cursor.createdAt),
+					and(
+						eq(products.createdAt, meta.cursor.createdAt),
+						lte(products.id, meta.cursor.lastId),
+					),
+				),
+			);
 
 		return this.db
 			.select({
@@ -65,17 +79,7 @@ export class ProductsQueriesRepositoryImpl
 			.leftJoin(categories, eq(categories.id, products.categoryId))
 			.where(
 				and(
-					or(
-						cursor.createdAt
-							? lte(products.createdAt, cursor.createdAt)
-							: sql`true`,
-						and(
-							cursor.createdAt
-								? eq(products.createdAt, cursor.createdAt)
-								: sql`true`,
-							cursor.lastId ? lte(products.id, cursor.lastId) : sql`true`,
-						),
-					),
+					...filters,
 					or(
 						searchQuery
 							? like(products.description, `%${searchQuery}%`)

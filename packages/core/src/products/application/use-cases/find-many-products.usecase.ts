@@ -22,13 +22,13 @@ export class FindManyProductsUseCase {
 		const { hasMore, items, lastItem } = calculateNextCursor(data, meta.limit);
 
 		const nextCursor: BaseCursorDto = {
-			lastId: hasMore ? lastItem.id : null,
-			createdAt: hasMore ? lastItem.createdAt : null,
+			lastId: lastItem.id,
+			createdAt: lastItem.createdAt,
 		};
 
 		return {
 			items,
-			nextCursor,
+			nextCursor: hasMore ? nextCursor : undefined,
 		};
 	}
 }

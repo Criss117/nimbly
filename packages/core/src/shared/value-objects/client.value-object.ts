@@ -12,8 +12,8 @@ export const clientCode = z
 	.max(225, "El código no puede exceder los 225 caracteres");
 
 export const clientsCursor = z.object({
-	createdAt: z.date().nullish(),
-	lastClientCode: z.string().max(100).nullish(),
+	createdAt: z.date(),
+	lastClientCode: z.string().max(100),
 });
 
 export type ClientId = z.infer<typeof clientId>;

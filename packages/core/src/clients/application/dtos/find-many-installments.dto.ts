@@ -4,7 +4,7 @@ import { limit } from "@/shared/value-objects/query.value-objects";
 import { clientId } from "@/shared/value-objects/client.value-object";
 
 export const findManyInstallmentsDto = z.object({
-	cursor: baseCursorDto,
+	cursor: baseCursorDto.nullish(),
 	limit: limit,
 	clientId: clientId,
 });

@@ -54,4 +54,15 @@ export const clientsController = createTRPCRouter({
 	deleteManyPayments: protectedProcedure
 		.input(deleteManyPaymentsByIdsDto)
 		.mutation(({ input }) => deleteManyPaymentsUseCase.execute(input)),
+
+	findAll: protectedProcedure.query(() =>
+		findManyClientsUseCase.execute({
+			cursor: {
+				createdAt: undefined,
+				lastClientCode: undefined,
+			},
+			limit: 20,
+			searchQuery: undefined,
+		}),
+	),
 });

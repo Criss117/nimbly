@@ -1,4 +1,14 @@
-import { and, desc, eq, getTableColumns, lte, not, or, sql } from "drizzle-orm";
+import {
+	and,
+	desc,
+	eq,
+	getTableColumns,
+	lte,
+	not,
+	or,
+	type SQL,
+	sql,
+} from "drizzle-orm";
 import { verifyInstallmentPaymentSchema } from "../mappers/installments-payments.mapper";
 import type { InstallmentsQueriesRepository } from "@/clients/domain/repositories/installments-queries.repository";
 import { schemas, type TX } from "@nimbly/db";
@@ -19,8 +29,21 @@ export class InstallmentsQueriesRepositoryImpl
 		meta: FindManyInstallmentsDto,
 		tx?: TX,
 	): Promise<InstallmentPlanDetail[]> {
-		const { clientId, cursor, limit } = meta;
+		const { clientId, limit } = meta;
 		const db = tx ?? this.db;
+
+		const cursorFilters: SQL[] = [];
+
+		meta.cursor &&
+			cursorFilters.push(
+				or(
+					lte(installmentPlans.createdAt, meta.cursor.createdAt),
+					and(
+						eq(installmentPlans.createdAt, meta.cursor.createdAt),
+						lte(installmentPlans.id, meta.cursor.lastId),
+					),
+				),
+			);
 
 		const plans = await db
 			.select({
@@ -44,20 +67,7 @@ export class InstallmentsQueriesRepositoryImpl
 			)
 			.where(
 				and(
-					or(
-						cursor.createdAt
-							? lte(installmentPlans.createdAt, cursor.createdAt)
-							: sql`true`,
-						and(
-							cursor.createdAt
-								? eq(installmentPlans.createdAt, cursor.createdAt)
-								: sql`true`,
-							cursor.lastId
-								? lte(installmentPlans.id, cursor.lastId)
-								: sql`true`,
-						),
-					),
-
+					...cursorFilters,
 					eq(installmentPlans.clientId, clientId),
 					eq(installmentPlans.isActive, true),
 				),

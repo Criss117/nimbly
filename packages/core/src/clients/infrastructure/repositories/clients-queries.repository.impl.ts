@@ -9,6 +9,7 @@ import {
 	max,
 	or,
 	sql,
+	type SQL,
 } from "drizzle-orm";
 import type { ClientsQueriesRepository } from "@/clients/domain/repositories/clients-queries.repository";
 import type { FindManyClientsDto } from "@/clients/application/dtos/find-many-clients.dto";
@@ -68,36 +69,35 @@ export class ClientsQueriesRepositoryImpl implements ClientsQueriesRepository {
 
 	public findMany(meta: FindManyClientsDto, tx?: TX): Promise<ClientSummary[]> {
 		const db = tx ?? this.db;
-		const { cursor, limit, searchQuery } = meta;
+		const { limit, searchQuery } = meta;
+
+		const cursorFilters: SQL[] = [];
+		const searchFilters: SQL[] = [];
+
+		meta.cursor &&
+			cursorFilters.push(
+				or(
+					lte(clients.createdAt, meta.cursor.createdAt),
+					and(
+						eq(clients.createdAt, meta.cursor.createdAt),
+						lte(clients.clientCode, meta.cursor.lastClientCode),
+					),
+				),
+			);
+
+		searchQuery &&
+			searchFilters.push(
+				or(
+					like(clients.fullName, `%${searchQuery}%`),
+					like(clients.clientCode, `%${searchQuery}%`),
+				),
+			);
 
 		return db
 			.select()
 			.from(clients)
 			.where(
-				and(
-					or(
-						cursor.createdAt
-							? lte(clients.createdAt, cursor.createdAt)
-							: sql`true`,
-						and(
-							cursor.createdAt
-								? eq(clients.createdAt, cursor.createdAt)
-								: sql`true`,
-							cursor.lastClientCode
-								? lte(clients.clientCode, cursor.lastClientCode)
-								: sql`true`,
-						),
-					),
-					or(
-						searchQuery
-							? like(clients.fullName, `%${searchQuery}%`)
-							: sql`true`,
-						searchQuery
-							? like(clients.clientCode, `%${searchQuery}%`)
-							: sql`true`,
-					),
-					eq(clients.isActive, true),
-				),
+				and(...cursorFilters, ...searchFilters, eq(clients.isActive, true)),
 			)
 			.orderBy(desc(clients.createdAt))
 			.limit(limit + 1);

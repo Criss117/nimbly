@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, lte, or, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, lte, or, type SQL } from "drizzle-orm";
 import type DBClient from "@nimbly/db";
 import { schemas } from "@nimbly/db";
 import type { PaymentsQueriesRepository } from "@/clients/domain/repositories/payments-queries.repository";
@@ -14,7 +14,20 @@ export class PaymentsQueriesRepositoryImpl
 	constructor(private readonly db: DBClient["client"]) {}
 
 	findManyByClient(meta: FindManyPaymentsDto): Promise<PaymentSummary[]> {
-		const { clientId, cursor, limit } = meta;
+		const { clientId, limit } = meta;
+
+		const cursorFilter: SQL[] = [];
+
+		meta.cursor &&
+			cursorFilter.push(
+				or(
+					lte(payments.createdAt, meta.cursor.createdAt),
+					and(
+						eq(payments.createdAt, meta.cursor.createdAt),
+						lte(payments.id, meta.cursor.lastId),
+					),
+				),
+			);
 
 		return this.db
 			.select({
@@ -27,18 +40,7 @@ export class PaymentsQueriesRepositoryImpl
 			.from(payments)
 			.where(
 				and(
-					or(
-						cursor.createdAt
-							? lte(payments.createdAt, cursor.createdAt)
-							: sql`true`,
-						and(
-							cursor.createdAt
-								? eq(payments.createdAt, cursor.createdAt)
-								: sql`true`,
-							cursor.lastId ? lte(payments.id, cursor.lastId) : sql`true`,
-						),
-					),
-
+					...cursorFilter,
 					eq(payments.clientId, clientId),
 					eq(payments.isActive, true),
 				),

@@ -5,10 +5,10 @@ import { productsController } from "./modules/products/controllers/products.cont
 import { ticketsController } from "./modules/tickets/controller";
 
 export const appRouter = createTRPCRouter({
+	clients: clientsController,
 	greets: publicProcedure.query(() => "hello world"),
 	products: productsController,
 	categories: categoriesController,
-	clients: clientsController,
 	tickets: ticketsController,
 });
 
