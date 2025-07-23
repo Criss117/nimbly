@@ -51,9 +51,10 @@ export class ProductsQueriesRepositoryImpl
 	}
 
 	public findMany(meta: FindManyProductsDto): Promise<ProductDetail[]> {
-		const { limit, searchQuery } = meta;
+		const { limit } = meta;
 
 		const filters: SQL[] = [];
+		const searchFilters: SQL[] = [];
 
 		meta.cursor &&
 			filters.push(
@@ -63,6 +64,14 @@ export class ProductsQueriesRepositoryImpl
 						eq(products.createdAt, meta.cursor.createdAt),
 						lte(products.id, meta.cursor.lastId),
 					),
+				),
+			);
+
+		meta.searchQuery &&
+			searchFilters.push(
+				or(
+					like(products.description, `%${meta.searchQuery}%`),
+					like(products.barcode, `%${meta.searchQuery}%`),
 				),
 			);
 
@@ -80,14 +89,7 @@ export class ProductsQueriesRepositoryImpl
 			.where(
 				and(
 					...filters,
-					or(
-						searchQuery
-							? like(products.description, `%${searchQuery}%`)
-							: sql`true`,
-						searchQuery
-							? like(products.barcode, `%${searchQuery}%`)
-							: sql`true`,
-					),
+					...searchFilters,
 					eq(products.isActive, true),
 					isNotNull(products.barcode),
 				),

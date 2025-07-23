@@ -5,7 +5,7 @@ import { z } from "zod";
 export const findManyCategoriesDto = z.object({
 	limit: limit,
 	searchQuery: searchQuery.nullish(),
-	cursor: baseCursorDto,
+	cursor: baseCursorDto.nullish(),
 });
 
 export type FindManyCategoriesDto = z.infer<typeof findManyCategoriesDto>;

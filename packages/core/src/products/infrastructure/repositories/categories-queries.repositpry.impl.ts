@@ -1,4 +1,4 @@
-import { and, desc, eq, like, lte, or, sql } from "drizzle-orm";
+import { and, desc, eq, like, lte, or, type SQL, sql } from "drizzle-orm";
 import type DBClient from "@nimbly/db";
 import { schemas } from "@nimbly/db";
 import type {
@@ -16,29 +16,31 @@ export class CategoriesQueriesRepositoryImpl
 	constructor(private readonly db: DBClient["client"]) {}
 
 	public findMany(meta: FindManyCategoriesDto): Promise<CategoryDetail[]> {
-		const { cursor, limit, searchQuery } = meta;
+		const { limit } = meta;
+
+		const cursorFilters: SQL[] = [];
+
+		meta.cursor &&
+			cursorFilters.push(
+				or(
+					lte(categories.createdAt, meta.cursor.createdAt),
+					and(
+						eq(categories.createdAt, meta.cursor.createdAt),
+						lte(categories.id, meta.cursor.lastId),
+					),
+				),
+			);
+
+		const searchFilters: SQL[] = [];
+
+		meta.searchQuery &&
+			searchFilters.push(or(like(categories.name, `%${meta.searchQuery}%`)));
 
 		return this.db
 			.select()
 			.from(categories)
 			.where(
-				and(
-					or(
-						cursor.createdAt
-							? lte(categories.createdAt, cursor.createdAt)
-							: sql`true`,
-						and(
-							cursor.createdAt
-								? eq(categories.createdAt, cursor.createdAt)
-								: sql`true`,
-							cursor.lastId ? lte(categories.id, cursor.lastId) : sql`true`,
-						),
-					),
-					or(
-						searchQuery ? like(categories.name, `%${searchQuery}%`) : sql`true`,
-					),
-					eq(categories.isActive, true),
-				),
+				and(...cursorFilters, ...searchFilters, eq(categories.isActive, true)),
 			)
 			.orderBy(desc(categories.createdAt))
 			.limit(limit + 1);
