@@ -1,7 +1,13 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ]
+	"eslint.workingDirectories": [
+		{
+			"mode": "auto"
+		}
+	],
+	// allow autocomplete for ArkType expressions like "string | num"
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	// prioritize ArkType's "type" for autoimports
+	"typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"]
 }

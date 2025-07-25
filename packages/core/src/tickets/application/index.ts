@@ -8,5 +8,4 @@ export * from "./dtos/create-ticket-item.dto";
 export * from "./dtos/create-ticket.dto";
 export * from "./dtos/delete-ticket.dto";
 export * from "./dtos/update-ticket.dto";
-export * from "./dtos/find-many-tickets.dto";
 export * from "./dtos/find.dto";
