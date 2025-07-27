@@ -35,7 +35,7 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
                   'description', ${ticketItems.description},
                   'price', ${ticketItems.price},
                   'quantity', ${ticketItems.quantity},
-                  'subtotal', ${ticketItems.subtotal},
+                  'subtotal', ${ticketItems.subtotal}
                 )
             )`,
 			})
@@ -48,8 +48,8 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
 		return data.map((d) => {
 			const { success, data, error } = verifyTicketItemDto(d.items);
 
-			if (!success || !data) {
-				throw new Error(error.message, {
+			if (!success || !data || !data.length) {
+				throw new Error(error?.message, {
 					cause: "INTERNAL_SERVER_ERROR",
 				});
 			}
@@ -61,7 +61,7 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
 		});
 	}
 
-	findManySummaryByClient(clientId: string): Promise<TicketSummary[]> {
+	public findManySummaryByClient(clientId: string): Promise<TicketSummary[]> {
 		return this.db
 			.select()
 			.from(tickets)
@@ -72,7 +72,7 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
 	public async findOneTicket(
 		ticketId: number,
 		clientId: string,
-	): Promise<TicketSummary> {
+	): Promise<TicketSummary | null> {
 		const [ticket] = await this.db
 			.select()
 			.from(tickets)
