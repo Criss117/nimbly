@@ -1,11 +1,12 @@
 import { createContext, use, useState } from "react";
-import type { ProductDetail } from "@nimbly/core/products";
 import {
 	getCoreRowModel,
 	getPaginationRowModel,
 	useReactTable,
 	type Table as TableType,
 } from "@tanstack/react-table";
+import type { ClientSummary } from "@nimbly/core/clients";
+
 import { columns } from "./columns";
 import { Table } from "@/modules/shared/components/ui/table";
 import { Button } from "@/modules/shared/components/ui/button";
@@ -14,7 +15,7 @@ import { DataTable } from "@/modules/shared/components/table";
 interface RootProps {
 	children: React.ReactNode;
 	values: {
-		items: ProductDetail[];
+		items: ClientSummary[];
 		isPending?: boolean;
 		limit: number;
 		hasNextPage: boolean;
@@ -23,8 +24,8 @@ interface RootProps {
 }
 
 interface Context {
-	table: TableType<ProductDetail>;
-	items: ProductDetail[];
+	table: TableType<ClientSummary>;
+	items: ClientSummary[];
 	isPending?: boolean;
 	limit: number;
 	hasNextPage: boolean;
@@ -34,12 +35,12 @@ interface Context {
 
 const ProductsTableContext = createContext<Context | null>(null);
 
-function useProductsTable() {
+function useClientsTable() {
 	const context = use(ProductsTableContext);
 
 	if (context === null) {
 		throw new Error(
-			"useProductsTable must be used within a ProductsTableProvider",
+			"useClientsTable must be used within a ProductsTableProvider",
 		);
 	}
 
@@ -106,13 +107,13 @@ function TableContainer({ children }: { children: React.ReactNode }) {
 }
 
 function Header() {
-	const { table } = useProductsTable();
+	const { table } = useClientsTable();
 
 	return <DataTable.Header table={table} />;
 }
 
 function Body() {
-	const { table, isPending, limit } = useProductsTable();
+	const { table, isPending, limit } = useClientsTable();
 
 	if (isPending) {
 		return (
@@ -125,7 +126,7 @@ function Body() {
 
 function Nav() {
 	const { table, hasNextPage, setNextPage, setPreviousPage } =
-		useProductsTable();
+		useClientsTable();
 
 	return (
 		<div className="flex items-center justify-end space-x-2">
@@ -149,10 +150,10 @@ function Nav() {
 	);
 }
 
-export const ProductsTable = {
+export const ClientsTable = {
 	Root,
 	Header,
-	useProductsTable,
+	useClientsTable,
 	Body,
 	Nav,
 	TableContainer,

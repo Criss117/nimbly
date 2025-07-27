@@ -1,20 +1,21 @@
 import { createContext, use, useState } from "react";
-import type { ProductDetail } from "@nimbly/core/products";
 import {
 	getCoreRowModel,
 	getPaginationRowModel,
 	useReactTable,
 	type Table as TableType,
 } from "@tanstack/react-table";
+
 import { columns } from "./columns";
 import { Table } from "@/modules/shared/components/ui/table";
 import { Button } from "@/modules/shared/components/ui/button";
 import { DataTable } from "@/modules/shared/components/table";
+import type { InstallmentPlanDetail } from "@nimbly/core/clients";
 
 interface RootProps {
 	children: React.ReactNode;
 	values: {
-		items: ProductDetail[];
+		items: InstallmentPlanDetail[];
 		isPending?: boolean;
 		limit: number;
 		hasNextPage: boolean;
@@ -23,8 +24,8 @@ interface RootProps {
 }
 
 interface Context {
-	table: TableType<ProductDetail>;
-	items: ProductDetail[];
+	table: TableType<InstallmentPlanDetail>;
+	items: InstallmentPlanDetail[];
 	isPending?: boolean;
 	limit: number;
 	hasNextPage: boolean;
@@ -32,14 +33,14 @@ interface Context {
 	setPreviousPage: () => void;
 }
 
-const ProductsTableContext = createContext<Context | null>(null);
+const InstallmentsTableContext = createContext<Context | null>(null);
 
-function useProductsTable() {
-	const context = use(ProductsTableContext);
+function useInstallmentsTable() {
+	const context = use(InstallmentsTableContext);
 
 	if (context === null) {
 		throw new Error(
-			"useProductsTable must be used within a ProductsTableProvider",
+			"useInstallmentsTable must be used within a ProductsTableProvider",
 		);
 	}
 
@@ -85,7 +86,7 @@ function Root({ children, values }: RootProps) {
 	};
 
 	return (
-		<ProductsTableContext.Provider
+		<InstallmentsTableContext.Provider
 			value={{
 				items,
 				table,
@@ -97,7 +98,7 @@ function Root({ children, values }: RootProps) {
 			}}
 		>
 			{children}
-		</ProductsTableContext.Provider>
+		</InstallmentsTableContext.Provider>
 	);
 }
 
@@ -106,13 +107,13 @@ function TableContainer({ children }: { children: React.ReactNode }) {
 }
 
 function Header() {
-	const { table } = useProductsTable();
+	const { table } = useInstallmentsTable();
 
 	return <DataTable.Header table={table} />;
 }
 
 function Body() {
-	const { table, isPending, limit } = useProductsTable();
+	const { table, isPending, limit } = useInstallmentsTable();
 
 	if (isPending) {
 		return (
@@ -125,7 +126,7 @@ function Body() {
 
 function Nav() {
 	const { table, hasNextPage, setNextPage, setPreviousPage } =
-		useProductsTable();
+		useInstallmentsTable();
 
 	return (
 		<div className="flex items-center justify-end space-x-2">
@@ -149,10 +150,10 @@ function Nav() {
 	);
 }
 
-export const ProductsTable = {
+export const InstallmentsTable = {
 	Root,
 	Header,
-	useProductsTable,
+	useInstallmentsTable,
 	Body,
 	Nav,
 	TableContainer,

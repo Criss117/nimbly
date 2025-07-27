@@ -1,20 +1,28 @@
 import { createContext, use, useState } from "react";
-import type { ProductDetail } from "@nimbly/core/products";
+import type { TicketDetail } from "@nimbly/core/tickets";
 import {
+	flexRender,
 	getCoreRowModel,
 	getPaginationRowModel,
 	useReactTable,
 	type Table as TableType,
 } from "@tanstack/react-table";
 import { columns } from "./columns";
-import { Table } from "@/modules/shared/components/ui/table";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/modules/shared/components/ui/table";
+import { Skeleton } from "@/modules/shared/components/ui/skeleton";
 import { Button } from "@/modules/shared/components/ui/button";
-import { DataTable } from "@/modules/shared/components/table";
 
 interface RootProps {
 	children: React.ReactNode;
 	values: {
-		items: ProductDetail[];
+		items: TicketDetail[];
 		isPending?: boolean;
 		limit: number;
 		hasNextPage: boolean;
@@ -23,8 +31,8 @@ interface RootProps {
 }
 
 interface Context {
-	table: TableType<ProductDetail>;
-	items: ProductDetail[];
+	table: TableType<TicketDetail>;
+	items: TicketDetail[];
 	isPending?: boolean;
 	limit: number;
 	hasNextPage: boolean;
@@ -32,14 +40,14 @@ interface Context {
 	setPreviousPage: () => void;
 }
 
-const ProductsTableContext = createContext<Context | null>(null);
+const TicketsTableContext = createContext<Context | null>(null);
 
-function useProductsTable() {
-	const context = use(ProductsTableContext);
+function useTicketsTable() {
+	const context = use(TicketsTableContext);
 
 	if (context === null) {
 		throw new Error(
-			"useProductsTable must be used within a ProductsTableProvider",
+			"useTicketsTable must be used within a ProductsTableProvider",
 		);
 	}
 
@@ -85,7 +93,7 @@ function Root({ children, values }: RootProps) {
 	};
 
 	return (
-		<ProductsTableContext.Provider
+		<TicketsTableContext.Provider
 			value={{
 				items,
 				table,
@@ -97,7 +105,7 @@ function Root({ children, values }: RootProps) {
 			}}
 		>
 			{children}
-		</ProductsTableContext.Provider>
+		</TicketsTableContext.Provider>
 	);
 }
 
@@ -106,26 +114,79 @@ function TableContainer({ children }: { children: React.ReactNode }) {
 }
 
 function Header() {
-	const { table } = useProductsTable();
+	const { table } = useTicketsTable();
 
-	return <DataTable.Header table={table} />;
+	return (
+		<TableHeader>
+			{table.getHeaderGroups().map((headerGroup) => (
+				<TableRow key={headerGroup.id}>
+					{headerGroup.headers.map((header) => {
+						return (
+							<TableHead key={header.id}>
+								{header.isPlaceholder
+									? null
+									: flexRender(
+											header.column.columnDef.header,
+											header.getContext(),
+										)}
+							</TableHead>
+						);
+					})}
+				</TableRow>
+			))}
+		</TableHeader>
+	);
 }
 
 function Body() {
-	const { table, isPending, limit } = useProductsTable();
+	const { table, isPending, limit } = useTicketsTable();
 
 	if (isPending) {
-		return (
-			<DataTable.BodySkeleton length={limit} columnsLength={columns.length} />
-		);
+		return <BodySkeleton length={limit} />;
 	}
 
-	return <DataTable.Body table={table} columns={columns} />;
+	return (
+		<TableBody>
+			{table.getRowModel().rows?.length ? (
+				table.getRowModel().rows.map((row) => (
+					<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+						{row.getVisibleCells().map((cell) => (
+							<TableCell key={cell.id}>
+								{flexRender(cell.column.columnDef.cell, cell.getContext())}
+							</TableCell>
+						))}
+					</TableRow>
+				))
+			) : (
+				<TableRow>
+					<TableCell colSpan={columns.length} className="h-24 text-center">
+						Sin resultados
+					</TableCell>
+				</TableRow>
+			)}
+		</TableBody>
+	);
+}
+
+function BodySkeleton({ length = 10 }: { length?: number }) {
+	return (
+		<TableBody>
+			{Array.from({ length }).map((_, index) => (
+				<TableRow key={index.toString()}>
+					{Array.from({ length: columns.length }).map((_, index) => (
+						<TableCell key={index.toString()}>
+							<Skeleton className="h-4 w-full" />
+						</TableCell>
+					))}
+				</TableRow>
+			))}
+		</TableBody>
+	);
 }
 
 function Nav() {
 	const { table, hasNextPage, setNextPage, setPreviousPage } =
-		useProductsTable();
+		useTicketsTable();
 
 	return (
 		<div className="flex items-center justify-end space-x-2">
@@ -149,11 +210,12 @@ function Nav() {
 	);
 }
 
-export const ProductsTable = {
+export const TicketsTable = {
 	Root,
-	Header,
-	useProductsTable,
-	Body,
-	Nav,
+	useTicketsTable,
 	TableContainer,
+	Header,
+	Body,
+	BodySkeleton,
+	Nav,
 };

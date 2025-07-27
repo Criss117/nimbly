@@ -42,15 +42,17 @@ export function verifyInstallmentPaymentSchema(toParse: string) {
 		.array(installmentPaymentSummaryDto)
 		.safeParse(JSON.parse(toParse));
 
-	const dataParsed: InstallmentPayment[] = data.map((p) => ({
-		id: p.id,
-		status: p.status,
-		subtotalPaid: p.subtotalPaid,
-		subtotal: p.subtotal,
-		installmentNumber: p.installmentNumber,
-		dueDate: new Date(p.dueDate * 1000),
-		createdAt: new Date(p.createdAt * 1000),
-	}));
+	const dataParsed: InstallmentPayment[] = data
+		? data.map((p) => ({
+				id: p.id,
+				status: p.status,
+				subtotalPaid: p.subtotalPaid,
+				subtotal: p.subtotal,
+				installmentNumber: p.installmentNumber,
+				dueDate: new Date(p.dueDate * 1000),
+				createdAt: new Date(p.createdAt * 1000),
+			}))
+		: [];
 
 	return {
 		success,

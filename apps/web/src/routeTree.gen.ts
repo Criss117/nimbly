@@ -14,6 +14,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as privateSalesRouteImport } from './routes/(private)/sales'
 import { Route as privateDashboardRouteImport } from './routes/(private)/dashboard'
 import { Route as privateDashboardProductsRouteImport } from './routes/(private)/dashboard/products'
+import { Route as privateDashboardClientsIndexRouteImport } from './routes/(private)/dashboard/clients/index'
+import { Route as privateDashboardClientsClientidRouteImport } from './routes/(private)/dashboard/clients/$clientid'
 
 const ErrorRoute = ErrorRouteImport.update({
   id: '/error',
@@ -41,6 +43,18 @@ const privateDashboardProductsRoute =
     path: '/products',
     getParentRoute: () => privateDashboardRoute,
   } as any)
+const privateDashboardClientsIndexRoute =
+  privateDashboardClientsIndexRouteImport.update({
+    id: '/clients/',
+    path: '/clients/',
+    getParentRoute: () => privateDashboardRoute,
+  } as any)
+const privateDashboardClientsClientidRoute =
+  privateDashboardClientsClientidRouteImport.update({
+    id: '/clients/$clientid',
+    path: '/clients/$clientid',
+    getParentRoute: () => privateDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -48,6 +62,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof privateDashboardRouteWithChildren
   '/sales': typeof privateSalesRoute
   '/dashboard/products': typeof privateDashboardProductsRoute
+  '/dashboard/clients/$clientid': typeof privateDashboardClientsClientidRoute
+  '/dashboard/clients': typeof privateDashboardClientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -55,6 +71,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof privateDashboardRouteWithChildren
   '/sales': typeof privateSalesRoute
   '/dashboard/products': typeof privateDashboardProductsRoute
+  '/dashboard/clients/$clientid': typeof privateDashboardClientsClientidRoute
+  '/dashboard/clients': typeof privateDashboardClientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -63,12 +81,28 @@ export interface FileRoutesById {
   '/(private)/dashboard': typeof privateDashboardRouteWithChildren
   '/(private)/sales': typeof privateSalesRoute
   '/(private)/dashboard/products': typeof privateDashboardProductsRoute
+  '/(private)/dashboard/clients/$clientid': typeof privateDashboardClientsClientidRoute
+  '/(private)/dashboard/clients/': typeof privateDashboardClientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/error' | '/dashboard' | '/sales' | '/dashboard/products'
+  fullPaths:
+    | '/'
+    | '/error'
+    | '/dashboard'
+    | '/sales'
+    | '/dashboard/products'
+    | '/dashboard/clients/$clientid'
+    | '/dashboard/clients'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/error' | '/dashboard' | '/sales' | '/dashboard/products'
+  to:
+    | '/'
+    | '/error'
+    | '/dashboard'
+    | '/sales'
+    | '/dashboard/products'
+    | '/dashboard/clients/$clientid'
+    | '/dashboard/clients'
   id:
     | '__root__'
     | '/'
@@ -76,6 +110,8 @@ export interface FileRouteTypes {
     | '/(private)/dashboard'
     | '/(private)/sales'
     | '/(private)/dashboard/products'
+    | '/(private)/dashboard/clients/$clientid'
+    | '/(private)/dashboard/clients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -122,15 +158,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof privateDashboardProductsRouteImport
       parentRoute: typeof privateDashboardRoute
     }
+    '/(private)/dashboard/clients/': {
+      id: '/(private)/dashboard/clients/'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof privateDashboardClientsIndexRouteImport
+      parentRoute: typeof privateDashboardRoute
+    }
+    '/(private)/dashboard/clients/$clientid': {
+      id: '/(private)/dashboard/clients/$clientid'
+      path: '/clients/$clientid'
+      fullPath: '/dashboard/clients/$clientid'
+      preLoaderRoute: typeof privateDashboardClientsClientidRouteImport
+      parentRoute: typeof privateDashboardRoute
+    }
   }
 }
 
 interface privateDashboardRouteChildren {
   privateDashboardProductsRoute: typeof privateDashboardProductsRoute
+  privateDashboardClientsClientidRoute: typeof privateDashboardClientsClientidRoute
+  privateDashboardClientsIndexRoute: typeof privateDashboardClientsIndexRoute
 }
 
 const privateDashboardRouteChildren: privateDashboardRouteChildren = {
   privateDashboardProductsRoute: privateDashboardProductsRoute,
+  privateDashboardClientsClientidRoute: privateDashboardClientsClientidRoute,
+  privateDashboardClientsIndexRoute: privateDashboardClientsIndexRoute,
 }
 
 const privateDashboardRouteWithChildren =

@@ -176,10 +176,10 @@ async function seed() {
 	//Insert Products
 	await dbClient.client.insert(products).values(productsData);
 	//Insert Clients
-	//await dbClient.client
-	//  .insert(clients)
-	//  .values(clientsData)
-	//   .returning({ id: clients.id });
+	await dbClient.client
+		.insert(clients)
+		.values(clientsData)
+		.returning({ id: clients.id });
 
 	//const ticketsData = generateTickets(productsData, clientIds);
 

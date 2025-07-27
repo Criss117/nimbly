@@ -1,31 +1,32 @@
 import { Loader2Icon } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/integrations/trpc/config";
-import type { ProductDetail } from "@nimbly/core/products";
-import { ProductsTable } from "@/modules/products/presentation/components/products-table";
-import { SiteHeader } from "@/modules/shared/components/app-sidebar";
-import { useFilterProducts } from "@/modules/products/application/context/filter-products.context";
-import { SearchInput } from "@/modules/shared/components/search-query";
-import { Button } from "@/modules/shared/components/ui/button";
-import { cn } from "@/modules/shared/lib/utils";
-import { CreateProductDialog } from "../components/create-product-dialog";
+import type { ClientSummary } from "@nimbly/core/clients";
 
-export function ProductsScreen() {
-	const { limit, searchQuery, setSearchQuery } = useFilterProducts();
+import { cn } from "@/modules/shared/lib/utils";
+import { useTRPC } from "@/integrations/trpc/config";
+import { Button } from "@/modules/shared/components/ui/button";
+import { SiteHeader } from "@/modules/shared/components/app-sidebar";
+import { SearchInput } from "@/modules/shared/components/search-query";
+import { ClientsTable } from "@/modules/clients/presentation/components/clients-table";
+import { useFilterClients } from "@/modules/clients/application/context/filter-clients.context";
+import { CreateClientDialog } from "../components/create-client-dialog";
+
+export function ClientsScreen() {
 	const trpc = useTRPC();
+	const { limit, searchQuery, setSearchQuery } = useFilterClients();
 	const { data, isFetching, hasNextPage, fetchNextPage, refetch } =
 		useInfiniteQuery(
-			trpc.products.findMany.infiniteQueryOptions(
+			trpc.clients.findMany.infiniteQueryOptions(
 				{
 					limit,
 					searchQuery,
 				},
 				{
 					getNextPageParam: (lastPage) =>
-						lastPage.nextCursor
+						lastPage.nextCursor?.createdAt
 							? {
-									lastId: lastPage.nextCursor.lastId,
 									createdAt: lastPage.nextCursor.createdAt as unknown as Date,
+									lastClientCode: lastPage.nextCursor.lastClientCode,
 								}
 							: undefined,
 				},
@@ -33,13 +34,13 @@ export function ProductsScreen() {
 		);
 
 	const items = data
-		? (data?.pages.flatMap((page) => page.items) as unknown as ProductDetail[])
+		? (data?.pages.flatMap((page) => page.items) as unknown as ClientSummary[])
 		: [];
 
 	return (
 		<>
-			<SiteHeader label="Lista de Productos" />
-			<ProductsTable.Root
+			<SiteHeader label="List de Clientes" />
+			<ClientsTable.Root
 				values={{
 					items,
 					limit,
@@ -58,9 +59,9 @@ export function ProductsScreen() {
 							/>
 						</div>
 						<div className="flex items-end flex-col gap-y-2">
-							<CreateProductDialog />
+							<CreateClientDialog />
 							<div className="flex gap-x-2">
-								<ProductsTable.Nav />
+								<ClientsTable.Nav />
 								<Button variant="outline" size="icon" onClick={() => refetch()}>
 									<Loader2Icon
 										className={cn("h-4 w-4", isFetching && "animate-spin")}
@@ -69,13 +70,13 @@ export function ProductsScreen() {
 							</div>
 						</div>
 					</header>
-					<ProductsTable.TableContainer>
-						<ProductsTable.Header />
-						<ProductsTable.Body />
-					</ProductsTable.TableContainer>
-					<ProductsTable.Nav />
+					<ClientsTable.TableContainer>
+						<ClientsTable.Header />
+						<ClientsTable.Body />
+					</ClientsTable.TableContainer>
+					<ClientsTable.Nav />
 				</div>
-			</ProductsTable.Root>
+			</ClientsTable.Root>
 		</>
 	);
 }
