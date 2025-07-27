@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { integer } from "drizzle-orm/sqlite-core";
 
 export const auditMetadata = {
-	isActive: integer("is_active", { mode: "boolean" }).default(true),
+	isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
 	createdAt: integer("created_at", { mode: "timestamp" })
 		.default(sql`(strftime('%s', 'now'))`)
 		.notNull(),

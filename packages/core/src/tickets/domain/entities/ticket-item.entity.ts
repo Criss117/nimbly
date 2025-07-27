@@ -2,7 +2,7 @@ export interface TicketItemDetail {
 	isActive: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	deletedAt: Date;
+	deletedAt: Date | null;
 	id: number;
 	productId: number;
 	ticketId: number;

@@ -29,7 +29,7 @@ export const createClientDto = z.object({
 		.optional()
 		.nullish(),
 
-	creditLimit: z.coerce
+	creditLimit: z
 		.number({ error: "El límite de crédito es obligatorio." })
 		.int({ message: "El límite de crédito debe ser un número entero." })
 		.min(1, { message: "El límite de crédito debe ser al menos 1." }),

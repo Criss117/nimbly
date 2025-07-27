@@ -2,10 +2,10 @@ import z from "zod";
 import type { TicketItemDetail } from "@/tickets/domain/entities/ticket-item.entity";
 
 export const ticketItemMapper = z.object({
-	isActive: z.boolean(),
+	isActive: z.number().int().positive(),
 	createdAt: z.number(), // Treating Date as timestamp number
 	updatedAt: z.number(), // Treating Date as timestamp number
-	deletedAt: z.number(), // Treating Date as timestamp number
+	deletedAt: z.number().nullish(), // Treating Date as timestamp number
 	id: z.number().int().positive(),
 	productId: z.number().int().positive(),
 	ticketId: z.number().int().positive(),
@@ -20,12 +20,15 @@ export function verifyTicketItemDto(toParse: string) {
 		.array(ticketItemMapper)
 		.safeParse(JSON.parse(toParse));
 
-	const dataParsed: TicketItemDetail[] = data.map((p) => ({
-		...p,
-		updatedAt: new Date(p.updatedAt * 1000),
-		deletedAt: new Date(p.deletedAt * 1000),
-		createdAt: new Date(p.createdAt * 1000),
-	}));
+	const dataParsed: TicketItemDetail[] = data
+		? data.map((p) => ({
+				...p,
+				updatedAt: new Date(p.updatedAt * 1000),
+				deletedAt: p.deletedAt ? new Date(p.deletedAt * 1000) : null,
+				createdAt: new Date(p.createdAt * 1000),
+				isActive: p.isActive === 1,
+			}))
+		: [];
 
 	return {
 		success,

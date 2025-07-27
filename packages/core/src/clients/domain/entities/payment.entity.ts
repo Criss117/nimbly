@@ -3,5 +3,5 @@ export interface PaymentSummary {
 	id: number;
 	clientId: string;
 	amount: number;
-	note: string;
+	note: string | null;
 }
