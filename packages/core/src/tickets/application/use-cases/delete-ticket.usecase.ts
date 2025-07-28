@@ -1,14 +1,14 @@
-import type { ReduceInstallmentPayUseCase } from "@/clients/application/use-cases/installments/reduce-installment-pay.usecase";
 import type { TicketsCommandsRepository } from "@/tickets/domain/repositories/tickets-commands.repository";
 import type { TicketsQueriesRepository } from "@/tickets/domain/repositories/tickets-queries.repository";
 import type { DeleteTicketDto } from "../dtos/delete-ticket.dto";
+import type { ReduceInstallmentTotalUseCase } from "@/clients";
 import type DBClient from "@nimbly/db";
 
 export class DeleteTicketUseCase {
 	constructor(
 		private readonly ticketsQueriesRepository: TicketsQueriesRepository,
 		private readonly ticketsCommandsRepository: TicketsCommandsRepository,
-		private readonly reduceInstallmentPayUseCase: ReduceInstallmentPayUseCase,
+		private readonly reduceInstallmentTotalUseCase: ReduceInstallmentTotalUseCase,
 		private readonly dbClient: DBClient,
 	) {}
 
@@ -31,7 +31,7 @@ export class DeleteTicketUseCase {
 				tx,
 			);
 
-			const reducePaysPromises = this.reduceInstallmentPayUseCase.execute(
+			const reducePaysPromises = this.reduceInstallmentTotalUseCase.execute(
 				clientId,
 				ticket.total,
 				tx,

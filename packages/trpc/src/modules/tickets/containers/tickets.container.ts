@@ -13,7 +13,6 @@ import {
 import { dbClient } from "@/config";
 import {
 	createInstallmentPlanUseCase,
-	reduceInstallmentPayUseCase,
 	reduceInstallmentTotalUseCase,
 } from "@/modules/clients/containers/intallments.container";
 import { updateProductStockUseCase } from "@/modules/products/containers/products.container";
@@ -34,7 +33,7 @@ export const decreaseTicketTotalUseCase = new DecreaseTicketTotalUseCase(
 export const deleteTicketUseCase = new DeleteTicketUseCase(
 	ticketsQueriesRepository,
 	ticketsCommandsRepository,
-	reduceInstallmentPayUseCase,
+	reduceInstallmentTotalUseCase,
 	dbClient,
 );
 
@@ -52,5 +51,6 @@ export const returnFormTicketUseCase = new ReturnFormTicketUseCase(
 	findDebtInfoUseCase,
 	updateProductStockUseCase,
 	reduceInstallmentTotalUseCase,
+	deleteTicketUseCase,
 	dbClient,
 );

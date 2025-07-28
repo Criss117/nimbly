@@ -7,6 +7,7 @@ import type {
 } from "@/tickets/domain";
 import type { UpdateProductStockUseCase } from "@/products";
 import type { ReduceInstallmentTotalUseCase } from "@/clients";
+import type { DeleteTicketUseCase } from "./delete-ticket.usecase";
 
 export class ReturnFormTicketUseCase {
 	constructor(
@@ -15,6 +16,7 @@ export class ReturnFormTicketUseCase {
 		private readonly findDebtInfoUseCase: FindDebtInfoUseCase,
 		private readonly updateProductStockUseCase: UpdateProductStockUseCase,
 		private readonly reduceInstallmentTotalUseCase: ReduceInstallmentTotalUseCase,
+		private readonly deleteTicketUseCase: DeleteTicketUseCase,
 		private readonly dbClient: DBClient,
 	) {}
 
@@ -61,6 +63,12 @@ export class ReturnFormTicketUseCase {
 			});
 		}
 
+		if (totalTicketDebt === totalToReturn) {
+			await this.deleteTicketUseCase.execute({ ticketId, clientId });
+
+			return;
+		}
+
 		const { totalDebt } = await this.findDebtInfoUseCase.execute(clientId);
 
 		if (totalToReturn > totalDebt) {
@@ -70,6 +78,9 @@ export class ReturnFormTicketUseCase {
 		}
 
 		await this.dbClient.transaction((tx) => {
+			const updateInstallmentPromise =
+				this.reduceInstallmentTotalUseCase.execute(clientId, totalToReturn, tx);
+
 			const updateStockPromises = itemsToDelete.map((i) =>
 				this.updateProductStockUseCase.execute(
 					{
@@ -80,9 +91,6 @@ export class ReturnFormTicketUseCase {
 					tx,
 				),
 			);
-
-			const updateInstallmentPromise =
-				this.reduceInstallmentTotalUseCase.execute(clientId, totalToReturn, tx);
 
 			const updateTicketPromise =
 				this.ticketsCommandsRepository.deleteTicketItems(data, tx);
