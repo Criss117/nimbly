@@ -72,9 +72,26 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
 	public async findOneTicket(
 		ticketId: number,
 		clientId: string,
-	): Promise<TicketSummary | null> {
+	): Promise<TicketDetail | null> {
 		const [ticket] = await this.db
-			.select()
+			.select({
+				...getTableColumns(tickets),
+				items: sql<string>`json_group_array(
+                json_object (
+                  'isActive', ${ticketItems.isActive},
+                  'createdAt', ${ticketItems.createdAt},
+                  'updatedAt', ${ticketItems.updatedAt},
+                  'deletedAt', ${ticketItems.deletedAt},
+                  'id', ${ticketItems.id},
+                  'productId', ${ticketItems.productId},
+                  'ticketId', ${ticketItems.ticketId},
+                  'description', ${ticketItems.description},
+                  'price', ${ticketItems.price},
+                  'quantity', ${ticketItems.quantity},
+                  'subtotal', ${ticketItems.subtotal}
+                )
+            )`,
+			})
 			.from(tickets)
 			.where(
 				and(
@@ -88,6 +105,17 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
 			return null;
 		}
 
-		return ticket;
+		const { success, data, error } = verifyTicketItemDto(ticket.items);
+
+		if (!success || !data || !data.length) {
+			throw new Error(error?.message, {
+				cause: "INTERNAL_SERVER_ERROR",
+			});
+		}
+
+		return {
+			...ticket,
+			items: data,
+		};
 	}
 }

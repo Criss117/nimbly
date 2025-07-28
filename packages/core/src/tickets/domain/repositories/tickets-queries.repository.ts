@@ -7,5 +7,5 @@ export interface TicketsQueriesRepository {
 	findOneTicket(
 		ticketId: number,
 		clientId: string,
-	): Promise<TicketSummary | null>;
+	): Promise<TicketDetail | null>;
 }
