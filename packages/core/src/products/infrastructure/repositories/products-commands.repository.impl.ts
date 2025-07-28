@@ -53,10 +53,19 @@ export class ProductsCommandsRepositoryImpl
 	public async updateStock(data: UpdateStockDto, tx?: TX): Promise<void> {
 		const db = tx ? tx : this.db;
 
+		const stockSQl = data.byReturn
+			? sql`${products.stock} + ${data.quantity}`
+			: sql`${products.stock} - ${data.quantity}`;
+
+		const quantitySoldSQl = data.byReturn
+			? sql`${products.quantitySold} - ${data.quantity}`
+			: sql`${products.quantitySold} + ${data.quantity}`;
+
 		await db
 			.update(products)
 			.set({
-				stock: sql`${products.stock} - ${data.quantity}`,
+				stock: stockSQl,
+				quantitySold: quantitySoldSQl,
 				updatedAt: new Date(),
 			})
 			.where(eq(products.id, data.productId));
