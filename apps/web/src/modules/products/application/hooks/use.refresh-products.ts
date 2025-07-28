@@ -6,8 +6,6 @@ export function useRefreshProducts() {
 	const queryClient = useQueryClient();
 
 	const refreshProductsScreen = () => {
-		console.log("refreshing products screen");
-
 		queryClient.invalidateQueries(trpc.products.findMany.infiniteQueryFilter());
 	};
 

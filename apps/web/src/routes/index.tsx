@@ -1,9 +1,6 @@
 import { useTRPC } from "@/integrations/trpc/config";
 import { InfiniteScroll } from "@/modules/shared/components/infinite-scroll";
-import {
-	useSuspenseInfiniteQuery,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -29,9 +26,6 @@ function RouteComponent() {
 		),
 	);
 	// const clients = useSuspenseQuery(trpc.clients.findAll.queryOptions());
-
-	// console.log(products.data);
-
 	return (
 		<div>
 			<pre>

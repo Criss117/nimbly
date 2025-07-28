@@ -42,7 +42,6 @@ function usePaysListTable() {
 }
 
 function Root({ children, values }: RootProps) {
-	console.log({ items: values.items });
 	const { items, limit, isPending } = values;
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
