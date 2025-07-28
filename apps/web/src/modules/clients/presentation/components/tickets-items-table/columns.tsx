@@ -1,10 +1,10 @@
-import { format } from "@formkit/tempo";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { PaymentSummary } from "@nimbly/core/clients";
+import type { TicketItemDetail } from "@nimbly/core/tickets";
+
 import { Checkbox } from "@/modules/shared/components/ui/checkbox";
 import { formatCurrency } from "@/modules/shared/lib/utils";
 
-export const columns: ColumnDef<PaymentSummary>[] = [
+export const columns: ColumnDef<TicketItemDetail>[] = [
 	{
 		id: "selected",
 		header: ({ table }) => {
@@ -36,23 +36,19 @@ export const columns: ColumnDef<PaymentSummary>[] = [
 		},
 	},
 	{
-		accessorKey: "amount",
-		header: "Monto",
+		accessorKey: "description",
+		header: "Descripción",
+	},
+	{
+		accessorKey: "quantity",
+		header: "Cantidad",
+	},
+	{
+		accessorKey: "subtotal",
+		header: "Subtotal",
 		cell: ({ getValue }) => {
 			const value = getValue() as number;
 			return `$${formatCurrency(value)}`;
-		},
-	},
-	{
-		accessorKey: "createdAt",
-		header: "Fecha",
-		cell: ({ getValue }) => {
-			const value = getValue() as Date;
-			return format({
-				date: value,
-				format: "long",
-				locale: "es-ES",
-			});
 		},
 	},
 ];

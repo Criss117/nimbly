@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ListCollapseIcon, MoreVerticalIcon, Trash2Icon } from "lucide-react";
-import type { TicketDetail } from "@nimbly/core/tickets";
+import { MoreVerticalIcon, Trash2Icon } from "lucide-react";
 
 import { useMutateTickets } from "@/modules/clients/application/hooks/use.mutate-tickets";
 import {
@@ -31,15 +30,10 @@ import {
 	DropdownMenuTrigger,
 } from "@/modules/shared/components/ui/dropdown-menu";
 import { Button } from "@/modules/shared/components/ui/button";
-import { ScrollArea } from "@/modules/shared/components/ui/scroll-area";
-import { formatCurrency } from "@/modules/shared/lib/utils";
+import { TicketItemsList } from "./items-list.actions";
 
 interface Props {
 	children?: React.ReactNode;
-}
-
-interface TicketItemCardProps {
-	ticket: TicketDetail;
 }
 
 interface DeleteTicketProps {
@@ -59,48 +53,6 @@ function Menu({ children }: Props) {
 				<DropdownMenuGroup className="space-y-2">{children}</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	);
-}
-
-function TicketItemsList({ ticket }: TicketItemCardProps) {
-	return (
-		<DropdownMenuItem onClick={(e) => e.preventDefault()} asChild>
-			<Dialog>
-				<DialogTrigger asChild>
-					<Button className="w-full" variant="outline" size="sm">
-						<ListCollapseIcon />
-						Ver detalles
-					</Button>
-				</DialogTrigger>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Detalle del ticket</DialogTitle>
-						<DialogDescription>
-							Aquí verás todos los detalles del ticket
-						</DialogDescription>
-						<ScrollArea className="max-h-96">
-							<div className="space-y-2">
-								{ticket.items.map((item) => (
-									<div
-										key={item.id}
-										className="bg-card text-card-foreground flex gap-6 rounded-xl border p-3 shadow-sm justify-between"
-									>
-										<p>{item.quantity}</p>
-										<p>{item.description}</p>
-										<p>{formatCurrency(item.subtotal)}</p>
-									</div>
-								))}
-							</div>
-						</ScrollArea>
-						<DialogFooter>
-							<DialogClose asChild>
-								<Button variant="outline">Cerrar</Button>
-							</DialogClose>
-						</DialogFooter>
-					</DialogHeader>
-				</DialogContent>
-			</Dialog>
-		</DropdownMenuItem>
 	);
 }
 

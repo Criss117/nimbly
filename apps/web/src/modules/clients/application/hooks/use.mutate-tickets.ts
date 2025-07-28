@@ -26,7 +26,27 @@ export function useMutateTickets() {
 		}),
 	);
 
+	const returnFromTicket = useMutation(
+		trpc.tickets.returnFromTicket.mutationOptions({
+			onMutate: () => {
+				toast.loading("Devolviendo artículos", {
+					id: "return-from-ticket",
+				});
+			},
+			onSuccess: (_, variables) => {
+				toast.dismiss("return-from-ticket");
+				toast.success("Artículos devueltos");
+				refreshClientPageData(variables.clientId);
+			},
+			onError: (err) => {
+				toast.dismiss("return-from-ticket");
+				toast.error(err.message);
+			},
+		}),
+	);
+
 	return {
 		deleteTicket,
+		returnFromTicket,
 	};
 }
