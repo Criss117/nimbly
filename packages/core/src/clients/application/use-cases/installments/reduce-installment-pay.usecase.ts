@@ -1,8 +1,11 @@
+import type { TX } from "@nimbly/db";
 import { updateInstallmentStatus } from "@/shared/utils/distribute-payments";
 import type { InstallmentsCommandsRepository } from "@/clients/domain/repositories/installments-commands.repository";
 import type { InstallmentsQueriesRepository } from "@/clients/domain/repositories/installments-queries.repository";
-import type { TX } from "@nimbly/db";
 
+/**
+ * Use case para reducir el monto pagado de un plan de pagos
+ */
 export class ReduceInstallmentPayUseCase {
 	constructor(
 		private readonly installmentsQueriesRepository: InstallmentsQueriesRepository,
@@ -10,8 +13,10 @@ export class ReduceInstallmentPayUseCase {
 	) {}
 
 	public async execute(clientId: string, amount: number, tx?: TX) {
-		const activePlan =
-			await this.installmentsQueriesRepository.findActivePlan(clientId);
+		const activePlan = await this.installmentsQueriesRepository.findActivePlan(
+			clientId,
+			tx,
+		);
 
 		if (!activePlan) {
 			throw new Error("EL cliente no tiene un plan de pagos activo", {

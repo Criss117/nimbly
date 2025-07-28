@@ -14,11 +14,13 @@ export * from "./use-cases/clients/create-client.usecase";
 export * from "./use-cases/clients/find-many-clients.usecase";
 export * from "./use-cases/clients/find-one-client-by.usecase";
 export * from "./use-cases/clients/update-client.usecase";
+export * from "./use-cases/clients/find-debt-info.usecase";
 
 export * from "./use-cases/installments/create-installment-plan.usecase";
 export * from "./use-cases/installments/find-many-installments-by-client.usecase";
 export * from "./use-cases/installments/pay-installment-plan.usecase";
 export * from "./use-cases/installments/reduce-installment-pay.usecase";
+export * from "./use-cases/installments/reduce-installment-total.usecase";
 
 export * from "./use-cases/payments/delete-many-payments.usecase";
 export * from "./use-cases/payments/find-many-payments-by-client.usecase";

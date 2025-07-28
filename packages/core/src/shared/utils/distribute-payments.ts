@@ -41,7 +41,6 @@ export function updateInstallmentStatus(
 	installments: InstallmentPayment[],
 	total: number,
 ): InstallmentPayment[] {
-	// Crear una copia del array para no mutar el original
 	const updatedInstallments = [...installments];
 	const changedInstallments: InstallmentPayment[] = [];
 	let remainingTotal = total;

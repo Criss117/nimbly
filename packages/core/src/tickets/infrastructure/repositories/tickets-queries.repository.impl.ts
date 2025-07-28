@@ -93,6 +93,7 @@ export class TicketsQueriesRepositoryImpl implements TicketsQueriesRepository {
             )`,
 			})
 			.from(tickets)
+			.innerJoin(ticketItems, eq(tickets.id, ticketItems.ticketId))
 			.where(
 				and(
 					eq(tickets.id, ticketId),

@@ -6,6 +6,7 @@ import type {
 	TicketsQueriesRepository,
 } from "@/tickets/domain";
 import type { UpdateProductStockUseCase } from "@/products";
+import type { ReduceInstallmentTotalUseCase } from "@/clients";
 
 export class ReturnFormTicketUseCase {
 	constructor(
@@ -13,6 +14,7 @@ export class ReturnFormTicketUseCase {
 		private readonly ticketsCommandsRepository: TicketsCommandsRepository,
 		private readonly findDebtInfoUseCase: FindDebtInfoUseCase,
 		private readonly updateProductStockUseCase: UpdateProductStockUseCase,
+		private readonly reduceInstallmentTotalUseCase: ReduceInstallmentTotalUseCase,
 		private readonly dbClient: DBClient,
 	) {}
 
@@ -79,10 +81,17 @@ export class ReturnFormTicketUseCase {
 				),
 			);
 
+			const updateInstallmentPromise =
+				this.reduceInstallmentTotalUseCase.execute(clientId, totalToReturn, tx);
+
 			const updateTicketPromise =
 				this.ticketsCommandsRepository.deleteTicketItems(data, tx);
 
-			return Promise.all([...updateStockPromises, updateTicketPromise]);
+			return Promise.all([
+				...updateStockPromises,
+				updateTicketPromise,
+				updateInstallmentPromise,
+			]);
 		});
 	}
 }
