@@ -34,6 +34,7 @@ export const products = sqliteTable(
 		categoryId: integer("category_id").references(() => categories.id, {
 			onDelete: "cascade",
 		}),
+		quantitySold: integer("quantity_sold").notNull().default(0),
 		...auditMetadata,
 	},
 	(table) => [index("barcode_idx").on(table.barcode)],
