@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ListCollapseIcon, MoreVerticalIcon, Trash2Icon } from "lucide-react";
 import type { TicketDetail } from "@nimbly/core/tickets";
+
 import { useMutateTickets } from "@/modules/clients/application/hooks/use.mutate-tickets";
 import {
 	AlertDialog,
@@ -12,7 +13,6 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/modules/shared/components/ui/alert-dialog";
-import { Button } from "@/modules/shared/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -30,6 +30,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/modules/shared/components/ui/dropdown-menu";
+import { Button } from "@/modules/shared/components/ui/button";
 import { ScrollArea } from "@/modules/shared/components/ui/scroll-area";
 import { formatCurrency } from "@/modules/shared/lib/utils";
 
@@ -73,9 +74,9 @@ function TicketItemsList({ ticket }: TicketItemCardProps) {
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Lista de coutas</DialogTitle>
+						<DialogTitle>Detalle del ticket</DialogTitle>
 						<DialogDescription>
-							Aquí verás todas las cuotas de pago
+							Aquí verás todos los detalles del ticket
 						</DialogDescription>
 						<ScrollArea className="max-h-96">
 							<div className="space-y-2">

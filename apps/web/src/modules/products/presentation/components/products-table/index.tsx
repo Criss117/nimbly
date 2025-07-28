@@ -19,6 +19,7 @@ interface RootProps {
 		limit: number;
 		hasNextPage: boolean;
 		fetchNextPage: (callback: () => void) => void;
+		setLimit: (value: number) => void;
 	};
 }
 
@@ -28,6 +29,7 @@ interface Context {
 	isPending?: boolean;
 	limit: number;
 	hasNextPage: boolean;
+	setLimit: (value: number) => void;
 	setNextPage: () => void;
 	setPreviousPage: () => void;
 }
@@ -47,7 +49,8 @@ function useProductsTable() {
 }
 
 function Root({ children, values }: RootProps) {
-	const { items, limit, isPending, hasNextPage, fetchNextPage } = values;
+	const { items, limit, isPending, hasNextPage, fetchNextPage, setLimit } =
+		values;
 	const [pagination, setPagination] = useState({
 		pageSize: limit,
 		pageIndex: 0,
@@ -93,6 +96,7 @@ function Root({ children, values }: RootProps) {
 				limit,
 				hasNextPage,
 				setNextPage,
+				setLimit,
 				setPreviousPage,
 			}}
 		>
@@ -149,6 +153,12 @@ function Nav() {
 	);
 }
 
+function Limit() {
+	const { setLimit, limit } = useProductsTable();
+
+	return <DataTable.Limit limit={limit} setLimit={setLimit} />;
+}
+
 export const ProductsTable = {
 	Root,
 	Header,
@@ -156,4 +166,5 @@ export const ProductsTable = {
 	Body,
 	Nav,
 	TableContainer,
+	Limit,
 };

@@ -7,10 +7,14 @@ export const columns: ColumnDef<ProductDetail>[] = [
 	{
 		accessorKey: "barcode",
 		header: "Codigo de barras",
+		size: 150,
+		maxSize: 150,
 	},
 	{
 		accessorKey: "description",
 		header: "Descripción",
+		size: 200,
+		maxSize: 200,
 	},
 	{
 		accessorKey: "category",
@@ -20,8 +24,11 @@ export const columns: ColumnDef<ProductDetail>[] = [
 				id: number;
 				name: string;
 			} | null;
-			return <span>{value?.name ?? "Sin categoría"}</span>;
+
+			return <span>{value?.name ?? "-"}</span>;
 		},
+		size: 100,
+		maxSize: 100,
 	},
 	{
 		accessorKey: "costPrice",
@@ -30,6 +37,8 @@ export const columns: ColumnDef<ProductDetail>[] = [
 			const value = getValue() as number;
 			return <span>{formatCurrency(value)}</span>;
 		},
+		size: 100,
+		maxSize: 100,
 	},
 	{
 		accessorKey: "salePrice",
@@ -38,6 +47,8 @@ export const columns: ColumnDef<ProductDetail>[] = [
 			const value = getValue() as number;
 			return <span>{formatCurrency(value)}</span>;
 		},
+		size: 100,
+		maxSize: 100,
 	},
 	{
 		accessorKey: "wholesalePrice",
@@ -46,14 +57,24 @@ export const columns: ColumnDef<ProductDetail>[] = [
 			const value = getValue() as number;
 			return <span>{formatCurrency(value)}</span>;
 		},
+		size: 100,
+		maxSize: 100,
 	},
 	{
 		accessorKey: "stock",
 		header: "Stock",
+		size: 50,
+		maxSize: 50,
+		cell: ({ getValue }) => {
+			const value = getValue() as number;
+			return <span className="text-right">{value}</span>;
+		},
 	},
 	{
 		accessorKey: "minStock",
 		header: "Stock mínimo",
+		size: 50,
+		maxSize: 50,
 	},
 	{
 		id: "actions",
@@ -65,5 +86,7 @@ export const columns: ColumnDef<ProductDetail>[] = [
 
 			return <ProductActions product={product} />;
 		},
+		size: 100,
+		maxSize: 100,
 	},
 ];

@@ -11,7 +11,7 @@ import { cn } from "@/modules/shared/lib/utils";
 import { CreateProductDialog } from "../components/create-product-dialog";
 
 export function ProductsScreen() {
-	const { limit, searchQuery, setSearchQuery } = useFilterProducts();
+	const { limit, searchQuery, setSearchQuery, setLimit } = useFilterProducts();
 	const trpc = useTRPC();
 	const { data, isFetching, hasNextPage, fetchNextPage, refetch } =
 		useInfiniteQuery(
@@ -45,6 +45,7 @@ export function ProductsScreen() {
 					limit,
 					isPending: isFetching,
 					hasNextPage,
+					setLimit,
 					fetchNextPage: (callback) => fetchNextPage().then(callback),
 				}}
 			>
@@ -60,6 +61,7 @@ export function ProductsScreen() {
 						<div className="flex items-end flex-col gap-y-2">
 							<CreateProductDialog />
 							<div className="flex gap-x-2">
+								<ProductsTable.Limit />
 								<ProductsTable.Nav />
 								<Button variant="outline" size="icon" onClick={() => refetch()}>
 									<Loader2Icon

@@ -9,7 +9,7 @@ import { SiteHeader } from "@/modules/shared/components/app-sidebar";
 import { SearchInput } from "@/modules/shared/components/search-query";
 import { ClientsTable } from "@/modules/clients/presentation/components/clients-table";
 import { useFilterClients } from "@/modules/clients/application/context/filter-clients.context";
-import { CreateClientDialog } from "../components/create-client-dialog";
+import { CreateClientDialog } from "@/modules/clients/presentation/components/create-client-dialog";
 
 export function ClientsScreen() {
 	const trpc = useTRPC();
@@ -39,7 +39,7 @@ export function ClientsScreen() {
 
 	return (
 		<>
-			<SiteHeader label="List de Clientes" />
+			<SiteHeader label="Lista de Clientes" />
 			<ClientsTable.Root
 				values={{
 					items,
