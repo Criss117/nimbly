@@ -3,6 +3,7 @@ import {
 	FindManyClientsUseCase,
 	FindOneClientByUseCase,
 	UpdateClientUseCase,
+	FindDebtInfoUseCase,
 } from "@nimbly/core/clients";
 import {
 	clientsCommandsRepository,
@@ -25,5 +26,9 @@ export const findOneClientByUseCase = new FindOneClientByUseCase(
 export const updateClientUseCase = new UpdateClientUseCase(
 	clientsCommandsRepository,
 	clientsQueriesRepository,
+	installmentsQueriesRepository,
+);
+
+export const findDebtInfoUseCase = new FindDebtInfoUseCase(
 	installmentsQueriesRepository,
 );

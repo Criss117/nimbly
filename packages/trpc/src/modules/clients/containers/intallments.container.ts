@@ -3,6 +3,7 @@ import {
 	FindManyInstallmentsByClientUseCase,
 	PayInstallmentPlanUseCase,
 	ReduceInstallmentPayUseCase,
+	ReduceInstallmentTotalUseCase,
 } from "@nimbly/core/clients";
 import {
 	installmentsCommandsRepository,
@@ -25,6 +26,11 @@ export const payInstallmentPlanUseCase = new PayInstallmentPlanUseCase(
 );
 
 export const reduceInstallmentPayUseCase = new ReduceInstallmentPayUseCase(
+	installmentsQueriesRepository,
+	installmentsCommandsRepository,
+);
+
+export const reduceInstallmentTotalUseCase = new ReduceInstallmentTotalUseCase(
 	installmentsQueriesRepository,
 	installmentsCommandsRepository,
 );

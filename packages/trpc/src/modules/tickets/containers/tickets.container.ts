@@ -4,6 +4,7 @@ import {
 	DeleteTicketUseCase,
 	FindManyTicketsByClientUseCase,
 	IncreaseTicketTotalUseCase,
+	ReturnFormTicketUseCase,
 } from "@nimbly/core/tickets";
 import {
 	ticketsCommandsRepository,
@@ -13,8 +14,10 @@ import { dbClient } from "@/config";
 import {
 	createInstallmentPlanUseCase,
 	reduceInstallmentPayUseCase,
+	reduceInstallmentTotalUseCase,
 } from "@/modules/clients/containers/intallments.container";
 import { updateProductStockUseCase } from "@/modules/products/containers/products.container";
+import { findDebtInfoUseCase } from "@/modules/clients/containers/clients.container";
 
 export const createTicketUseCase = new CreateTicketUseCase(
 	ticketsCommandsRepository,
@@ -41,4 +44,13 @@ export const findManyTicketsByClientUseCase =
 export const increaseTicketTotalUseCase = new IncreaseTicketTotalUseCase(
 	ticketsQueriesRepository,
 	ticketsCommandsRepository,
+);
+
+export const returnFormTicketUseCase = new ReturnFormTicketUseCase(
+	ticketsQueriesRepository,
+	ticketsCommandsRepository,
+	findDebtInfoUseCase,
+	updateProductStockUseCase,
+	reduceInstallmentTotalUseCase,
+	dbClient,
 );

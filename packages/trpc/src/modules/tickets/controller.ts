@@ -2,12 +2,14 @@ import { createTRPCRouter, protectedProcedure } from "@/config";
 import {
 	createTicketDto,
 	deleteTicketDto,
+	returnFromTicketDto,
 	findManyByClient,
 } from "@nimbly/core/tickets";
 import {
 	createTicketUseCase,
 	deleteTicketUseCase,
 	findManyTicketsByClientUseCase,
+	returnFormTicketUseCase,
 } from "./containers/tickets.container";
 
 export const ticketsController = createTRPCRouter({
@@ -24,4 +26,8 @@ export const ticketsController = createTRPCRouter({
 	delete: protectedProcedure
 		.input(deleteTicketDto)
 		.mutation(({ input }) => deleteTicketUseCase.execute(input)),
+
+	returnFromTicket: protectedProcedure
+		.input(returnFromTicketDto)
+		.mutation(({ input }) => returnFormTicketUseCase.execute(input)),
 });
