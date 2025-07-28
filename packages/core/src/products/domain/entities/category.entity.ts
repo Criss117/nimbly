@@ -8,8 +8,8 @@ export interface CategoryDetail {
 	isActive: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	deletedAt: Date;
+	deletedAt: Date | null;
 	id: number;
 	name: string;
-	description: string;
+	description: string | null;
 }

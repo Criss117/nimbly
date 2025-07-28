@@ -6,10 +6,7 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"]
-		},
-		"strict": true,
-		"skipLibCheck": true,
-		"exactOptionalPropertyTypes": true
+		}
 	},
 	"include": ["src"]
 }

@@ -4,31 +4,33 @@ export interface ProductSummary {
 	isActive: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	deletedAt: Date;
+	deletedAt: Date | null;
 	id: number;
-	barcode: string;
+	barcode: string | null;
 	description: string;
 	costPrice: number;
 	salePrice: number;
 	wholesalePrice: number;
 	stock: number;
 	minStock: number;
-	categoryId: number;
+	categoryId: number | null;
+	quantitySold: number;
 }
 
 export interface ProductDetail {
 	isActive: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	deletedAt: Date;
+	deletedAt: Date | null;
 	id: number;
-	barcode: string;
+	barcode: string | null;
 	description: string;
 	costPrice: number;
 	salePrice: number;
 	wholesalePrice: number;
 	stock: number;
 	minStock: number;
-	categoryId: number;
+	categoryId: number | null;
 	category: CategorySummary | null;
+	quantitySold: number;
 }
