@@ -111,18 +111,20 @@ function TicketItemsListFooter({ ticket }: Props) {
 					Cerrar
 				</Button>
 			</DialogClose>
-			{ticket.items.length === selectedRows.length ? (
-				<DeleteTicket ticket={ticket} />
-			) : (
-				<Button
-					className="flex-1"
-					variant="destructive"
-					disabled={selectedRows.length === 0}
-					onClick={onDelete}
-				>
-					Devolver {table.getFilteredSelectedRowModel().rows.length} articulo(s)
-				</Button>
-			)}
+			{ticket.status !== "paid" &&
+				(ticket.items.length === selectedRows.length ? (
+					<DeleteTicket ticket={ticket} />
+				) : (
+					<Button
+						className="flex-1"
+						variant="destructive"
+						disabled={selectedRows.length === 0}
+						onClick={onDelete}
+					>
+						Devolver {table.getFilteredSelectedRowModel().rows.length}{" "}
+						articulo(s)
+					</Button>
+				))}
 		</DialogFooter>
 	);
 }
