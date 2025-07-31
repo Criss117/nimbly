@@ -1,5 +1,6 @@
 import {
 	CreateCategoryUseCase,
+	FindAllCategoriesUseCase,
 	FindManyCategoriesUseCase,
 } from "@nimbly/core/products";
 import {
@@ -12,5 +13,9 @@ export const createCategoryUseCase = new CreateCategoryUseCase(
 );
 
 export const findManyCategoriesUseCase = new FindManyCategoriesUseCase(
+	categoriesQueriesRepository,
+);
+
+export const findAllCategoriesUseCase = new FindAllCategoriesUseCase(
 	categoriesQueriesRepository,
 );

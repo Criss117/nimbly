@@ -10,6 +10,7 @@ export * from "./dtos/update-stock.dto";
 export * from "./use-cases/create-category.usecase";
 export * from "./use-cases/create-product.usecase";
 export * from "./use-cases/delete-product.usecase";
+export * from "./use-cases/find-all-categories.usecase";
 export * from "./use-cases/find-all-products.usecase";
 export * from "./use-cases/find-many-categories.usecase";
 export * from "./use-cases/find-many-last-updated-products.usecase";

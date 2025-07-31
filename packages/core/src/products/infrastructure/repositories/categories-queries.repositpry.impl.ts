@@ -15,6 +15,13 @@ export class CategoriesQueriesRepositoryImpl
 {
 	constructor(private readonly db: DBClient["client"]) {}
 
+	public findAll(): Promise<CategoryDetail[]> {
+		return this.db
+			.select()
+			.from(categories)
+			.where(eq(categories.isActive, true));
+	}
+
 	public findMany(meta: FindManyCategoriesDto): Promise<CategoryDetail[]> {
 		const { limit } = meta;
 
