@@ -5,6 +5,7 @@ import {
 } from "@nimbly/core/products";
 import {
 	createCategoryUseCase,
+	findAllCategoriesUseCase,
 	findManyCategoriesUseCase,
 } from "../containers/categories.container";
 
@@ -16,4 +17,6 @@ export const categoriesController = createTRPCRouter({
 	create: protectedProcedure
 		.input(createCategoryDto)
 		.mutation(({ input }) => createCategoryUseCase.execute(input)),
+
+	findAll: protectedProcedure.query(() => findAllCategoriesUseCase.execute()),
 });
