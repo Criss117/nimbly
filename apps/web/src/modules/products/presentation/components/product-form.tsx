@@ -143,7 +143,6 @@ function Submit() {
 			type="submit"
 			form={product ? `update-product-${product.id}` : "create-product"}
 			disabled={isPending}
-			// onClick={onSubmit}
 		>
 			{isPending && (
 				<Loader2Icon size="small" color="black" className="animate-spin" />
@@ -259,6 +258,7 @@ function MinStock() {
 		/>
 	);
 }
+
 export const ProductForm = {
 	Root,
 	useProductForm,

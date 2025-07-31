@@ -9,6 +9,7 @@ import { SearchInput } from "@/modules/shared/components/search-query";
 import { Button } from "@/modules/shared/components/ui/button";
 import { cn } from "@/modules/shared/lib/utils";
 import { CreateProductDialog } from "../components/create-product-dialog";
+import { EditProductDialog } from "../components/edit-product-dialog";
 
 export function ProductsScreen() {
 	const { limit, searchQuery, setSearchQuery, setLimit } = useFilterProducts();
@@ -71,11 +72,13 @@ export function ProductsScreen() {
 							</div>
 						</div>
 					</header>
-					<ProductsTable.TableContainer>
-						<ProductsTable.Header />
-						<ProductsTable.Body />
-					</ProductsTable.TableContainer>
-					<ProductsTable.Nav />
+					<EditProductDialog.Root>
+						<ProductsTable.TableContainer>
+							<ProductsTable.Header />
+							<ProductsTable.Body />
+						</ProductsTable.TableContainer>
+						<ProductsTable.Nav />
+					</EditProductDialog.Root>
 				</div>
 			</ProductsTable.Root>
 		</>

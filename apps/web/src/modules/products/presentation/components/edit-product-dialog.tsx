@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { PencilIcon, PlusCircleIcon } from "lucide-react";
+import { createContext, use, useState } from "react";
+import { PencilIcon } from "lucide-react";
 import { Button } from "@/modules/shared/components/ui/button";
 import {
 	Dialog,
@@ -14,8 +14,80 @@ import {
 import { ProductForm } from "./product-form";
 import type { ProductDetail } from "@nimbly/core/products";
 
-interface Props {
-	product: ProductDetail;
+type Product = Omit<ProductDetail, "barcode"> & {
+	barcode: string;
+};
+
+interface Context {
+	product: Product | null;
+	isOpen: boolean;
+	setProduct: (product: Product) => void;
+	open: () => void;
+	close: () => void;
+}
+
+interface TriggerProps {
+	product: Omit<ProductDetail, "barcode"> & {
+		barcode: string;
+	};
+}
+
+interface RootProps {
+	children: React.ReactNode;
+}
+
+const EditProductFormContext = createContext<Context | null>(null);
+
+function useEditProductForm() {
+	const context = use(EditProductFormContext);
+
+	if (!context) {
+		throw new Error(
+			"useEditProductForm must be used within a EditProductFormContext.Provider",
+		);
+	}
+
+	return context;
+}
+
+function Root({ children }: RootProps) {
+	const [isOpen, setIsOpen] = useState(false);
+	const [product, setProduct] = useState<Product | null>(null);
+
+	const open = () => setIsOpen(true);
+	const close = () => setIsOpen(false);
+
+	return (
+		<EditProductFormContext.Provider
+			value={{
+				isOpen,
+				product,
+				open,
+				close,
+				setProduct,
+			}}
+		>
+			<Dialog
+				open={isOpen}
+				onOpenChange={(value) => {
+					setIsOpen(value);
+					if (!value) {
+						setProduct(null);
+					}
+				}}
+			>
+				{product && (
+					<ProductForm.Root action="update" product={product}>
+						<DialogTrigger asChild className="hidden">
+							open
+						</DialogTrigger>
+						<Content />
+					</ProductForm.Root>
+				)}
+			</Dialog>
+			{children}
+		</EditProductFormContext.Provider>
+	);
 }
 
 function Content() {
@@ -59,19 +131,23 @@ function Content() {
 	);
 }
 
-export function EditProductDialog({ product }: Props) {
-	const [open, setOpen] = useState(false);
+function Trigger({ product }: TriggerProps) {
+	const { open, setProduct } = useEditProductForm();
+
+	const handleClick = () => {
+		setProduct(product);
+		open();
+	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<ProductForm.Root action="update" product={product}>
-				<DialogTrigger asChild>
-					<Button size="icon" variant="outline">
-						<PencilIcon />
-					</Button>
-				</DialogTrigger>
-				<Content />
-			</ProductForm.Root>
-		</Dialog>
+		<Button size="icon" variant="outline" onClick={handleClick}>
+			<PencilIcon />
+		</Button>
 	);
 }
+
+export const EditProductDialog = {
+	Root,
+	useEditProductForm,
+	Trigger,
+};

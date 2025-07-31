@@ -9,7 +9,9 @@ interface Props {
 export function ProductActions({ product }: Props) {
 	return (
 		<div className="space-x-2 w-full flex">
-			<EditProductDialog product={product} />
+			<EditProductDialog.Trigger
+				product={{ ...product, barcode: product.barcode || "" }}
+			/>
 			<DeleteProduct productId={product.id} description={product.description} />
 		</div>
 	);
