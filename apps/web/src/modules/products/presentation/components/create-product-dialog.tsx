@@ -17,7 +17,7 @@ function Content() {
 	const { clearForm } = ProductForm.useProductForm();
 
 	return (
-		<DialogContent>
+		<DialogContent className="min-w-3xl">
 			<DialogHeader>
 				<DialogTitle>Agregar nuevo producto</DialogTitle>
 				<DialogDescription>
