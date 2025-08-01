@@ -15,6 +15,7 @@ import {
 	LayoutDashboardIcon,
 	ListIcon,
 	PlusCircleIcon,
+	Settings,
 	Users2Icon,
 } from "lucide-react";
 import ModeToggle from "./mode-toggle";
@@ -27,7 +28,7 @@ interface SiteHeaderProps {
 export const dashboardLinks = {
 	navMain: [
 		{
-			title: "Home",
+			title: "Inicio",
 			url: "/dashboard",
 			icon: LayoutDashboardIcon,
 		},
@@ -40,6 +41,11 @@ export const dashboardLinks = {
 			title: "Clientes",
 			url: "/dashboard/clients",
 			icon: Users2Icon,
+		},
+		{
+			title: "Configuraciones",
+			url: "/dashboard/settings",
+			icon: Settings,
 		},
 	],
 };

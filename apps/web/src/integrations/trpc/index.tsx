@@ -4,6 +4,7 @@ import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { TRPCProvider as TProvider } from "./config";
 import type { AppRouter } from "@nimbly/trpc";
 import { getQueryClient } from "../tanstack-query/config";
+import { env } from "@/config/env";
 
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
 	const queryClient = getQueryClient();
@@ -12,7 +13,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
 			links: [
 				httpBatchLink({
 					transformer: superjson,
-					url: `http://localhost:8787/api/trpc`,
+					url: `${env.VITE_API_URL}/api/trpc`,
 				}),
 			],
 		}),

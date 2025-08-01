@@ -12,6 +12,11 @@ import {
 	DialogTrigger,
 } from "@/modules/shared/components/ui/dialog";
 import { ProductForm } from "./product-form";
+import type { CategoryDetail } from "@nimbly/core/products";
+
+interface Props {
+	categories: CategoryDetail[];
+}
 
 function Content() {
 	const { clearForm } = ProductForm.useProductForm();
@@ -54,12 +59,12 @@ function Content() {
 	);
 }
 
-export function CreateProductDialog() {
+export function CreateProductDialog({ categories }: Props) {
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<ProductForm.Root action="create">
+			<ProductForm.Root action="create" categories={categories}>
 				<DialogTrigger asChild>
 					<Button size="icon">
 						<PlusCircleIcon />

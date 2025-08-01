@@ -1,9 +1,10 @@
-import { createContext, use } from "react";
+import { createContext, use, useMemo, useState } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
 import {
 	createProductDto,
+	type CategoryDetail,
 	type CreateProductDto,
 	type ProductSummary,
 } from "@nimbly/core/products";
@@ -11,17 +12,20 @@ import { useMutateProducts } from "@/modules/products/application/hooks/use.muta
 import { Form } from "@/modules/shared/components/ui/form";
 import { FormInput } from "@/modules/shared/components/form/form-input";
 import { Button } from "@/modules/shared/components/ui/button";
+import { ComboBoxInput } from "@/modules/shared/components/form/combobox-input";
 
 interface RootProps {
 	children: React.ReactNode;
 	product?: Omit<ProductSummary, "barcode"> & { barcode: string };
 	action: "create" | "update";
+	categories: CategoryDetail[];
 }
 
 interface Context {
 	form: UseFormReturn<CreateProductDto, unknown, CreateProductDto>;
 	action: "create" | "update";
 	isPending: boolean;
+	categories: CategoryDetail[];
 	product?: Omit<ProductSummary, "barcode"> & { barcode: string };
 	onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
 	clearForm: () => void;
@@ -51,7 +55,7 @@ const defaultValues: CreateProductDto = {
 	minStock: 0,
 };
 
-function Root({ action, children, product }: RootProps) {
+function Root({ action, children, product, categories }: RootProps) {
 	if (action === "update" && !product) {
 		throw new Error("ProductForm.Root must have a product");
 	}
@@ -116,9 +120,10 @@ function Root({ action, children, product }: RootProps) {
 				form,
 				action,
 				isPending: create.isPending || update.isPending,
+				product,
+				categories,
 				onSubmit,
 				clearForm,
-				product,
 			}}
 		>
 			<Form {...form}>
@@ -259,6 +264,29 @@ function MinStock() {
 	);
 }
 
+function SelectCategory() {
+	const { form, categories } = useProductForm();
+
+	const items = useMemo(
+		() =>
+			categories.map((category) => ({
+				value: category.id.toString(),
+				label: category.name,
+			})),
+		[categories],
+	);
+
+	return (
+		<ComboBoxInput
+			name="categoryId"
+			label="Categoría"
+			searchPlaceholder="Buscar categoría"
+			control={form.control}
+			items={items}
+		/>
+	);
+}
+
 export const ProductForm = {
 	Root,
 	useProductForm,
@@ -270,4 +298,5 @@ export const ProductForm = {
 	CostPrice,
 	SalePrice,
 	Barcode,
+	SelectCategory,
 };

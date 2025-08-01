@@ -12,7 +12,7 @@ import {
 	DialogTrigger,
 } from "@/modules/shared/components/ui/dialog";
 import { ProductForm } from "./product-form";
-import type { ProductDetail } from "@nimbly/core/products";
+import type { CategoryDetail, ProductDetail } from "@nimbly/core/products";
 
 type Product = Omit<ProductDetail, "barcode"> & {
 	barcode: string;
@@ -34,6 +34,7 @@ interface TriggerProps {
 
 interface RootProps {
 	children: React.ReactNode;
+	categories: CategoryDetail[];
 }
 
 const EditProductFormContext = createContext<Context | null>(null);
@@ -50,7 +51,7 @@ function useEditProductForm() {
 	return context;
 }
 
-function Root({ children }: RootProps) {
+function Root({ children, categories }: RootProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [product, setProduct] = useState<Product | null>(null);
 
@@ -77,7 +78,11 @@ function Root({ children }: RootProps) {
 				}}
 			>
 				{product && (
-					<ProductForm.Root action="update" product={product}>
+					<ProductForm.Root
+						action="update"
+						product={product}
+						categories={categories}
+					>
 						<DialogTrigger asChild className="hidden">
 							open
 						</DialogTrigger>
@@ -114,6 +119,7 @@ function Content() {
 				<ProductForm.Stock />
 				<ProductForm.MinStock />
 			</fieldset>
+			<ProductForm.SelectCategory />
 			<DialogFooter className="sm:justify-start">
 				<DialogClose asChild>
 					<Button

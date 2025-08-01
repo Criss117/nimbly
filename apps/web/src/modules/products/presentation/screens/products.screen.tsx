@@ -1,48 +1,34 @@
 import { Loader2Icon } from "lucide-react";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/integrations/trpc/config";
-import type { ProductDetail } from "@nimbly/core/products";
 import { ProductsTable } from "@/modules/products/presentation/components/products-table";
 import { SiteHeader } from "@/modules/shared/components/app-sidebar";
-import { useFilterProducts } from "@/modules/products/application/context/filter-products.context";
 import { SearchInput } from "@/modules/shared/components/search-query";
 import { Button } from "@/modules/shared/components/ui/button";
 import { cn } from "@/modules/shared/lib/utils";
 import { CreateProductDialog } from "../components/create-product-dialog";
 import { EditProductDialog } from "../components/edit-product-dialog";
+import { useFindManyProducts } from "../../application/hooks/use.find-many-products";
+import { useFindAllCategories } from "../../application/hooks/use.find-all-categories";
 
 export function ProductsScreen() {
-	const { limit, searchQuery, setSearchQuery, setLimit } = useFilterProducts();
-	const trpc = useTRPC();
-	const { data, isFetching, hasNextPage, fetchNextPage, refetch } =
-		useInfiniteQuery(
-			trpc.products.findMany.infiniteQueryOptions(
-				{
-					limit,
-					searchQuery,
-				},
-				{
-					getNextPageParam: (lastPage) =>
-						lastPage.nextCursor
-							? {
-									lastId: lastPage.nextCursor.lastId,
-									createdAt: lastPage.nextCursor.createdAt as unknown as Date,
-								}
-							: undefined,
-				},
-			),
-		);
-
-	const items = data
-		? (data?.pages.flatMap((page) => page.items) as unknown as ProductDetail[])
-		: [];
+	const {
+		data: products,
+		isFetching,
+		hasNextPage,
+		limit,
+		searchQuery,
+		setSearchQuery,
+		fetchNextPage,
+		refetch,
+		setLimit,
+	} = useFindManyProducts();
+	const { data: categories } = useFindAllCategories();
 
 	return (
 		<>
 			<SiteHeader label="Lista de Productos" />
 			<ProductsTable.Root
 				values={{
-					items,
+					items: products,
 					limit,
 					isPending: isFetching,
 					hasNextPage,
@@ -60,7 +46,7 @@ export function ProductsScreen() {
 							/>
 						</div>
 						<div className="flex items-end flex-col gap-y-2">
-							<CreateProductDialog />
+							<CreateProductDialog categories={categories} />
 							<div className="flex gap-x-2">
 								<ProductsTable.Limit />
 								<ProductsTable.Nav />
@@ -72,7 +58,7 @@ export function ProductsScreen() {
 							</div>
 						</div>
 					</header>
-					<EditProductDialog.Root>
+					<EditProductDialog.Root categories={categories}>
 						<ProductsTable.TableContainer>
 							<ProductsTable.Header />
 							<ProductsTable.Body />
