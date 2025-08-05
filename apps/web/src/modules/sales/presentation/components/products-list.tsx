@@ -20,6 +20,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import type { ProductDetail } from "@nimbly/core/products";
 import { useTicketsStore } from "@/modules/sales/application/store/tickets.store";
 import { SearchInput } from "@/modules/shared/components/search-query";
+import { cn } from "@/modules/shared/lib/utils";
 
 interface Props {
 	onSelectProduct: () => void;
@@ -75,7 +76,10 @@ function ProductsListSuspence({ searchQuery, onSelectProduct }: Props) {
 			{items.map((i) => (
 				<CommandItem
 					key={i.id}
-					className="flex items-center justify-between"
+					className={cn(
+						"flex items-center justify-between",
+						i.stock <= 0 && "text-red-500",
+					)}
 					onSelect={() => handleSelectProduct(i)}
 				>
 					{i.description}
