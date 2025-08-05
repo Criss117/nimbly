@@ -1,8 +1,7 @@
 import { useTicketsStore } from "@/modules/sales/application/store/tickets.store";
-import { CollectTicketDialog } from "../components/collect-ticket-dialog";
-import { SaveTicketFormStoreProvider } from "@/modules/sales/application/store/save-ticket-form.store";
 import { Separator } from "@/modules/shared/components/ui/separator";
 import { formatCurrency } from "@/modules/shared/lib/utils";
+import { CollectTicket } from "../components/collect-ticket";
 
 export function SalesFooterSection() {
 	const ticket = useTicketsStore((state) => state.getCurrentTicket());
@@ -19,9 +18,9 @@ export function SalesFooterSection() {
 	return (
 		<footer className="h-32 border-t px-20 fixed bottom-0 w-full z-30 bg-background flex py-2">
 			<div className="w-9/12 flex justify-end">
-				<SaveTicketFormStoreProvider>
-					<CollectTicketDialog ticket={ticket} />
-				</SaveTicketFormStoreProvider>
+				<CollectTicket.Root ticket={ticket}>
+					<CollectTicket.Dialog />
+				</CollectTicket.Root>
 			</div>
 			<Separator orientation="vertical" className="mx-5" />
 

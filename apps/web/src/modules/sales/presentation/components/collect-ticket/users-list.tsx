@@ -1,5 +1,10 @@
-import { CheckCircle } from "lucide-react";
 import { Suspense, useState } from "react";
+import { CheckCircle } from "lucide-react";
+import { useTRPC } from "@/integrations/trpc/config";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
+import type { ClientSummary } from "@nimbly/core/clients";
+
 import {
 	Command,
 	CommandEmpty,
@@ -7,22 +12,26 @@ import {
 	CommandItem,
 	CommandList,
 } from "@/modules/shared/components/ui/command";
-import type { ControllerRenderProps } from "react-hook-form";
-import { useSaveTicketForm } from "@/modules/sales/application/store/save-ticket-form.store";
-import type { CreateTicketSchema } from "@/modules/sales/application/models/create-tickets.schema";
 import {
 	FormField,
 	FormItem,
 	FormMessage,
 } from "@/modules/shared/components/ui/form";
-import type { ClientSummary } from "@nimbly/core/clients";
-import { useTRPC } from "@/integrations/trpc/config";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { InfiniteScroll } from "@/modules/shared/components/infinite-scroll";
+import type { CreateTicketSchema } from "@/modules/sales/application/models/create-tickets.schema";
 
-export function CreditTabsContent() {
+interface Props {
+	form: UseFormReturn<CreateTicketSchema, unknown, CreateTicketSchema>;
+}
+
+interface ListProps {
+	query: string;
+	field: ControllerRenderProps<CreateTicketSchema, "clientId">;
+	form: UseFormReturn<CreateTicketSchema, unknown, CreateTicketSchema>;
+}
+
+export function UsersList({ form }: Props) {
 	const [searchQuery, setSearchQuery] = useState("");
-	const { form } = useSaveTicketForm();
 
 	return (
 		<FormField
@@ -37,7 +46,7 @@ export function CreditTabsContent() {
 							onValueChange={setSearchQuery}
 						/>
 						<Suspense fallback={<CommandEmpty>Loading...</CommandEmpty>}>
-							<UsersList query={searchQuery} field={field} />
+							<List query={searchQuery} field={field} form={form} />
 						</Suspense>
 					</Command>
 				</FormItem>
@@ -46,14 +55,7 @@ export function CreditTabsContent() {
 	);
 }
 
-function UsersList({
-	query,
-	field,
-}: {
-	query: string;
-	field: ControllerRenderProps<CreateTicketSchema, "clientId">;
-}) {
-	const { form } = useSaveTicketForm();
+function List({ query, field, form }: ListProps) {
 	const trpc = useTRPC();
 	const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
 		useInfiniteQuery(
@@ -80,6 +82,7 @@ function UsersList({
 
 	const handleSelect = (client: ClientSummary) => {
 		form.setValue("clientId", client.id);
+		form.setValue("clientName", client.fullName);
 	};
 
 	return (

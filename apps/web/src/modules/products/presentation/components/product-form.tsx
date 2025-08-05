@@ -1,4 +1,4 @@
-import { createContext, use, useMemo, useState } from "react";
+import { createContext, use, useMemo } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
@@ -19,6 +19,7 @@ interface RootProps {
 	product?: Omit<ProductSummary, "barcode"> & { barcode: string };
 	action: "create" | "update";
 	categories: CategoryDetail[];
+	onSuccess?: () => void;
 }
 
 interface Context {
@@ -55,7 +56,7 @@ const defaultValues: CreateProductDto = {
 	minStock: 0,
 };
 
-function Root({ action, children, product, categories }: RootProps) {
+function Root({ action, children, product, categories, onSuccess }: RootProps) {
 	if (action === "update" && !product) {
 		throw new Error("ProductForm.Root must have a product");
 	}
@@ -87,6 +88,7 @@ function Root({ action, children, product, categories }: RootProps) {
 				{
 					onSuccess: () => {
 						form.reset();
+						onSuccess?.();
 					},
 				},
 			);
@@ -104,6 +106,7 @@ function Root({ action, children, product, categories }: RootProps) {
 				{
 					onSuccess: () => {
 						form.reset();
+						onSuccess?.();
 					},
 				},
 			);

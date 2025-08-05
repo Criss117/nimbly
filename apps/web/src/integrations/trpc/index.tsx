@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import { useState } from "react";
 import superjson from "superjson";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";

@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { useNetInfo } from "@/integrations/net-info";
 import { SiteHeader } from "@/modules/shared/components/app-sidebar";
-import { ThermalQuery } from "@/modules/settings/application/thermal-api";
 import { Button } from "@/modules/shared/components/ui/button";
+import { ThermalQuery } from "@/modules/shared/lib/thermal-api";
 
 export function SettingsPage() {
 	const { thermalInfo } = useNetInfo();
-	const [res, setRes] = useState<string>();
 
 	const thermalQuery = ThermalQuery.init("POS-80C")
 		.cut()
@@ -27,7 +25,7 @@ export function SettingsPage() {
 		.writeText(
 			ThermalQuery.formatEntry(
 				5,
-				"una descripcion muy largar para ver si todo funciona correctamente",
+				"una descripcion muy largar para ver si",
 				100000,
 			),
 		)
@@ -50,10 +48,7 @@ export function SettingsPage() {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(thermalQuery.payload),
-		})
-			.then((res) => res.json())
-			.then((data) => setRes(JSON.stringify(data, null, 2)))
-			.catch((err) => setRes(JSON.stringify(err, null, 2)));
+		}).then((res) => res.json());
 	};
 
 	return (

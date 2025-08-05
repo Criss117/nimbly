@@ -22,7 +22,8 @@
 		"build": "bunchee --minify",
 		"dev": "tsx watch src/index.ts",
 		"check-types": "tsc --noEmit",
-		"seed": "tsx seed/index.ts"
+		"seed": "tsx seed/index.ts",
+		"start": "node dist/es/index.mjs"
 	},
 	"keywords": [],
 	"author": "",

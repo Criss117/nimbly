@@ -82,6 +82,10 @@ function Root({ children, categories }: RootProps) {
 						action="update"
 						product={product}
 						categories={categories}
+						onSuccess={() => {
+							close();
+							setProduct(null);
+						}}
 					>
 						<DialogTrigger asChild className="hidden">
 							open

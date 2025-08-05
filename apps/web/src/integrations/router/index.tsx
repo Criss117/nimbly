@@ -4,8 +4,13 @@ import { routeTree } from "@/routeTree.gen";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "../trpc/config";
 
+export type RouterContext = {
+	trpc: ReturnType<typeof useTRPC>;
+	queryClient: ReturnType<typeof useQueryClient>;
+};
+
 // Create a new router instance
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, context: {} as RouterContext });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {

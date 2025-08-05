@@ -87,7 +87,7 @@ export function ComboBoxInput<T extends FieldValues>({
 													value={item.label}
 													key={item.value}
 													onSelect={() => {
-														field.onChange(item.value);
+														field.onChange(Number.parseInt(item.value));
 													}}
 												>
 													{item.label}

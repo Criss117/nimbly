@@ -185,7 +185,7 @@ export class ThermalQuery {
 		// Calculate available space for description
 		// Quantity (5 chars) + Total (variable) + Description
 		const availableDescriptionLength =
-			48 - quantityString.length - (totalString.length + 1); // +1 for the space before the total
+			48 - quantityString.length - (totalString.length + 2); // +1 for the space before the total
 
 		let formattedDescription: string;
 		if (description.length > availableDescriptionLength) {

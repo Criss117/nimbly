@@ -12,6 +12,11 @@ export const createTicketSchema = z
 				error: "Selecciona un cliente",
 			})
 			.nullish(),
+		clientName: z
+			.string({
+				error: "Escribe el nombre del cliente",
+			})
+			.nullish(),
 		items: z
 			.array(createTicketItemSchema, {
 				error: "Agrega al menos un item",

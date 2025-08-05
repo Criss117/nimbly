@@ -1,11 +1,13 @@
+import { createContext, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	createTicketSchema,
 	type CreateTicketSchema,
 } from "../models/create-tickets.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useNetInfo } from "@/integrations/net-info";
 import { useMutateTickets } from "../hooks/use.mutate-tickets";
+import { Ticket } from "@/modules/shared/lib/thermal-api/ticket";
 
 interface Context {
 	form: ReturnType<typeof useForm<CreateTicketSchema>>;
@@ -36,6 +38,7 @@ export function SaveTicketFormStoreProvider({
 	children,
 }: { children: React.ReactNode }) {
 	const { create } = useMutateTickets();
+	const { thermalInfo } = useNetInfo();
 	const [formValues, setFormValues] = useState<CreateTicketSchema>();
 	const form = useForm<CreateTicketSchema>({
 		resolver: zodResolver(createTicketSchema),
@@ -52,10 +55,26 @@ export function SaveTicketFormStoreProvider({
 	) => {
 		const { items, ...rest } = data;
 
+		const ticketPrint = new Ticket().addProducts(
+			items.map((item) => ({
+				description: item.description,
+				quantity: item.quantity,
+				salePrice: item.price,
+			})),
+		);
+
+		fetch(`${thermalInfo.url}/printer/imprimir`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(ticketPrint.payload),
+		}).then((res) => res.json());
+
 		create.mutate(
 			{
 				payType: rest.payType,
-				clientId: rest.clientId,
+				clientId: rest.clientId || undefined,
 				items: items.map((i) => ({
 					description: i.description,
 					price: i.price,

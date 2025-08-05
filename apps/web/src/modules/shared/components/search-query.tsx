@@ -18,15 +18,15 @@ export function SearchInput({
 	placeholder,
 }: Props) {
 	const [value, setValue] = useState(query);
-	const debouncedValue = useDebounce(value, debounceTime);
+	const debouncedValue = useDebounce(value.trim(), debounceTime);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setValue(e.target.value.trim().toLowerCase());
+		setValue(e.target.value.toLowerCase());
 	};
 
 	useEffect(() => {
 		setQuery(debouncedValue);
-	}, [debouncedValue]);
+	}, [debouncedValue, setQuery]);
 
 	return (
 		<div className="relative flex-1">
