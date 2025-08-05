@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import ModeToggle from "./mode-toggle";
 import { Separator } from "./ui/separator";
+import { useBusinessSettingsStore } from "@/modules/settings/application/stores/business-settings.store";
 
 interface SiteHeaderProps {
 	label: string;
@@ -52,6 +53,7 @@ export const dashboardLinks = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { pathname } = useLocation();
+	const { businessInfo } = useBusinessSettingsStore();
 
 	return (
 		<Sidebar collapsible="icon" {...props}>
@@ -64,7 +66,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						>
 							<Link to="/dashboard">
 								<ArrowUpCircleIcon className="h-5 w-5" />
-								<span className="text-base font-semibold">Nimbly</span>
+								<span className="text-base font-semibold">
+									{businessInfo ? businessInfo.name : "Nimbly"}
+								</span>
 							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>

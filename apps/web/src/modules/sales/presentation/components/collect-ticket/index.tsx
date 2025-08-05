@@ -6,11 +6,9 @@ import {
 	type CreateTicketSchema,
 } from "@/modules/sales/application/models/create-tickets.schema";
 import { Form } from "@/modules/shared/components/ui/form";
-import type { TicketStore } from "@/modules/sales/application/store/tickets.store";
 import { Dialog as DialogView } from "./dialog";
-import { Ticket } from "@/modules/shared/lib/thermal-api/ticket";
-import { useNetInfo } from "@/integrations/net-info";
 import { useMutateTickets } from "@/modules/sales/application/hooks/use.mutate-tickets";
+import type { TicketStore } from "@/modules/sales/application/store/tickets.store";
 
 interface RootProps {
 	children: React.ReactNode;
@@ -36,7 +34,6 @@ function useCollectTicket() {
 }
 
 function Root({ children, ticket }: RootProps) {
-	const { thermalInfo } = useNetInfo();
 	const { create } = useMutateTickets();
 	const form = useForm<CreateTicketSchema>({
 		resolver: zodResolver(createTicketSchema),
@@ -65,21 +62,21 @@ function Root({ children, ticket }: RootProps) {
 	const onSubmit = form.handleSubmit((data: CreateTicketSchema) => {
 		const { items, ...rest } = data;
 
-		const ticketPrint = new Ticket().addProducts(
-			items.map((item) => ({
-				description: item.description,
-				quantity: item.quantity,
-				salePrice: item.price,
-			})),
-		);
+		// const ticketPrint = new Ticket().addProducts(
+		// 	items.map((item) => ({
+		// 		description: item.description,
+		// 		quantity: item.quantity,
+		// 		salePrice: item.price,
+		// 	})),
+		// );
 
-		fetch(`${thermalInfo.url}/printer/imprimir`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(ticketPrint.payload),
-		}).then((res) => res.json());
+		// fetch(`${thermalInfo.url}/printer/imprimir`, {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 	},
+		// 	body: JSON.stringify(ticketPrint.payload),
+		// }).then((res) => res.json());
 
 		create.mutate(
 			{

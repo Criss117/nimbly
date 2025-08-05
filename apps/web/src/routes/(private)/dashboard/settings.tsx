@@ -1,4 +1,4 @@
-import { SettingsPage } from "@/modules/settings/presentation/screent/settings.page";
+import { SettingsScreen } from "@/modules/settings/presentation/screen/settings.screen";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(private)/dashboard/settings")({
@@ -6,5 +6,5 @@ export const Route = createFileRoute("/(private)/dashboard/settings")({
 });
 
 function RouteComponent() {
-	return <SettingsPage />;
+	return <SettingsScreen />;
 }
