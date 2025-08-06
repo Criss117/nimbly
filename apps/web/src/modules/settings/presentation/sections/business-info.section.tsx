@@ -34,7 +34,7 @@ export function BusinessInfoSection() {
 							<BusinessForm.Address />
 						</fieldset>
 						<BusinessForm.NIT />
-						<BusinessForm.Submit />
+						<BusinessForm.Submit className="w-full" />
 					</fieldset>
 				</BusinessForm.Root>
 			</CardContent>

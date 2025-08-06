@@ -3,6 +3,7 @@ import {
 	businessInfoDto,
 	type BusinessInfoDto,
 } from "../dtos/business-info.dto";
+import { LOCAL_STORAGE_KEYS } from "@/modules/shared/lib/constants";
 
 interface BussinessSettingsStore {
 	businessInfo: BusinessInfoDto | null;
@@ -34,11 +35,14 @@ export function BusinessSettingsStoreProvider({
 
 	const setBusinessInfo = (businessInfo: BusinessInfoDto) => {
 		setValues(businessInfo);
-		localStorage.setItem("nimbly-business-info", JSON.stringify(businessInfo));
+		localStorage.setItem(
+			LOCAL_STORAGE_KEYS.BUSINESS_INFO,
+			JSON.stringify(businessInfo),
+		);
 	};
 
 	useEffect(() => {
-		const infoSaved = localStorage.getItem("nimbly-business-info");
+		const infoSaved = localStorage.getItem(LOCAL_STORAGE_KEYS.BUSINESS_INFO);
 
 		if (!infoSaved) return;
 

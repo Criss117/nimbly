@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { TicketProduct } from "../models";
+import { LOCAL_STORAGE_KEYS } from "@/modules/shared/lib/constants";
 
 export type TicketStore = {
 	id: number;
@@ -319,6 +320,6 @@ export const useTicketsStore = create<Store>()(
 				});
 			},
 		}),
-		{ name: "nymbli_tickets" },
+		{ name: LOCAL_STORAGE_KEYS.TICKETS },
 	),
 );

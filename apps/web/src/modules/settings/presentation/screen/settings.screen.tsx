@@ -7,6 +7,7 @@ import {
 	TabsTrigger,
 } from "@/modules/shared/components/ui/tabs";
 import { BusinessInfoSection } from "../sections/business-info.section";
+import { ThermalInfoSection } from "../sections/thermal-info.section";
 
 const tabs = [
 	{
@@ -19,7 +20,7 @@ const tabs = [
 		value: "thermal-printers",
 		label: "Impresoras",
 		Icon: () => <Printer />,
-		View: () => <div>Hello 2</div>,
+		View: () => <ThermalInfoSection />,
 	},
 ] as const;
 
@@ -28,7 +29,10 @@ export function SettingsScreen() {
 		<>
 			<SiteHeader label="Configuraciones" />
 			<div className="flex flex-col items-center justify-center space-y-5 mt-5 mx-10">
-				<Tabs defaultValue="business" className="min-w-6xl mx-auto space-y-6">
+				<Tabs
+					defaultValue="business"
+					className="min-w-4xl max-w-6xl mx-auto space-y-6"
+				>
 					<TabsList className="w-full">
 						{tabs.map((t) => (
 							<TabsTrigger key={t.value} value={t.value} className="flex-1">

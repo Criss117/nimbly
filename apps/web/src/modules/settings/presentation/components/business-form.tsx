@@ -9,9 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormInput } from "@/modules/shared/components/form/form-input";
 import { Form } from "@/modules/shared/components/ui/form";
 import { Button } from "@/modules/shared/components/ui/button";
+import { cn } from "@/modules/shared/lib/utils";
 
 interface Context {
 	form: UseFormReturn<BusinessInfoDto, unknown, BusinessInfoDto>;
+}
+
+interface SubmitProps {
+	className?: string;
 }
 
 interface RootProps {
@@ -105,9 +110,9 @@ function NIT() {
 	);
 }
 
-function Submit() {
+function Submit({ className }: SubmitProps) {
 	return (
-		<Button type="submit" form="business-form">
+		<Button type="submit" form="business-form" className={cn(className)}>
 			Guardar
 		</Button>
 	);
