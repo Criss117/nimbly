@@ -39,7 +39,7 @@ export class CreateInstallmentPlanUseCase {
 			return this.installmentsCommandsRepository.updateInstallmentPlan(
 				{
 					id: activePlan.id,
-					status: data.total === activePlan.total ? "paid" : "partial",
+					status: data.total === activePlan.total ? "paid" : activePlan.status,
 					total: activePlan.total + data.total,
 					totalPaid: activePlan.totalPaid,
 					payments: paymentsToUpdate,

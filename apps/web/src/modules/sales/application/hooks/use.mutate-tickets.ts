@@ -1,11 +1,12 @@
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useTicketsStore } from "../store/tickets.store";
 import { useTRPC } from "@/integrations/trpc/config";
+import { useRefreshClientData } from "@/modules/clients/application/hooks/use.refresh-client-data";
 
 export function useMutateTickets() {
 	const trpc = useTRPC();
-	const queryClient = useQueryClient();
+	const { refreshClientPageData } = useRefreshClientData();
 	const clearCurrentTicket = useTicketsStore((s) => s.clearCurrentTicket);
 
 	const create = useMutation(
@@ -18,16 +19,7 @@ export function useMutateTickets() {
 			},
 			onSuccess: (_, variables) => {
 				if (variables.clientId) {
-					queryClient.invalidateQueries(
-						trpc.clients.findOneBy.queryFilter({
-							clientId: variables.clientId,
-						}),
-					);
-					queryClient.invalidateQueries(
-						trpc.tickets.findManyByClient.queryFilter({
-							clientId: variables.clientId,
-						}),
-					);
+					refreshClientPageData(variables.clientId);
 				}
 				toast.dismiss("create-ticket");
 				toast.success("Ticket creado exitosamente", {
