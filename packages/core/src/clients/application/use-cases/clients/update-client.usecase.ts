@@ -35,7 +35,7 @@ export class UpdateClientUseCase {
 			);
 
 			if (activePlan) {
-				throw new Error("Ya existe una cuota activa", {
+				throw new Error("No puedes cambiar los valores de la cuota", {
 					cause: "CONFLICT",
 				});
 			}

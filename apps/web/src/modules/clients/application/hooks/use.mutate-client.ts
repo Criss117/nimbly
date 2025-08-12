@@ -1,10 +1,11 @@
 import { useTRPC } from "@/integrations/trpc/config";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useRefreshClientData } from "./use.refresh-client-data";
 
 export function useMutateClients() {
 	const trpc = useTRPC();
-	// const { refreshClientPageData } = useRefreshClientData();
+	const { refreshClientPageData } = useRefreshClientData();
 
 	const create = useMutation(
 		trpc.clients.createClient.mutationOptions({
@@ -35,11 +36,12 @@ export function useMutateClients() {
 					id: "update-client",
 				});
 			},
-			onSuccess: () => {
+			onSuccess: (_, variables) => {
 				toast.dismiss("update-client");
 				toast.success("Cliente actualizado exitosamente", {
 					position: "top-center",
 				});
+				refreshClientPageData(variables.clientId);
 			},
 			onError: (err) => {
 				toast.dismiss("update-client");
