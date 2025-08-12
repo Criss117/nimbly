@@ -7,7 +7,7 @@ export function SalesScreen() {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<SalesHeaderSection />
-			<section className="mt-20 mb-32 mx-20">
+			<section className="mt-20 mb-36 mx-20">
 				<SalesSection />
 				<TicketsListSection />
 			</section>

@@ -86,8 +86,29 @@ export function PayDebt({ clientId, hasDebt, totalDebt }: Props) {
 					<DialogDescription>¿Cuánto desea abonar?</DialogDescription>
 				</DialogHeader>
 
+				{currentAmount >= totalDebt && (
+					<Alert variant="destructive">
+						<Terminal />
+						<AlertTitle>Se liquidará el crédito</AlertTitle>
+						<AlertDescription>
+							{currentAmount > totalDebt && (
+								<span>
+									La cantidad ingresada es mayor a la deuda del cliente, al
+									continuar la operación se liquidará el adeudo. El exedente no
+									se registrará como pago.
+								</span>
+							)}
+							{currentAmount === totalDebt && (
+								<span>
+									La cantidad ingresada es igual la deuda del cliente, al
+									continuar la operación se liquidará el adeudo.
+								</span>
+							)}
+						</AlertDescription>
+					</Alert>
+				)}
 				<Form {...form}>
-					<form onSubmit={onSubmit} id="pay-debt-form ">
+					<form onSubmit={onSubmit} id="pay-debt-form">
 						<FormInput
 							control={form.control}
 							name="amount"
@@ -95,28 +116,10 @@ export function PayDebt({ clientId, hasDebt, totalDebt }: Props) {
 							placeholder="Cantidad a abonar"
 							type="number"
 						/>
+						<pre>
+							<code>{JSON.stringify(form.formState.errors, null, 2)}</code>
+						</pre>
 					</form>
-					{currentAmount >= totalDebt && (
-						<Alert variant="destructive">
-							<Terminal />
-							<AlertTitle>Se liquidará el crédito</AlertTitle>
-							<AlertDescription>
-								{currentAmount > totalDebt && (
-									<span>
-										La cantidad ingresada es mayor a la deuda del cliente, al
-										continuar la operación se liquidará el adeudo. El exedente
-										no se registrará como pago.
-									</span>
-								)}
-								{currentAmount === totalDebt && (
-									<span>
-										La cantidad ingresada es igual la deuda del cliente, al
-										continuar la operación se liquidará el adeudo.
-									</span>
-								)}
-							</AlertDescription>
-						</Alert>
-					)}
 				</Form>
 
 				<DialogFooter className="flex-row gap-x-2">
@@ -129,6 +132,7 @@ export function PayDebt({ clientId, hasDebt, totalDebt }: Props) {
 						className="flex-1 flex-row gap-x-1.5"
 						disabled={create.isPending}
 						form="pay-debt-form"
+						type="submit"
 					>
 						Continuar
 					</Button>
