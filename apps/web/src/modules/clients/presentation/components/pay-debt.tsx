@@ -116,9 +116,6 @@ export function PayDebt({ clientId, hasDebt, totalDebt }: Props) {
 							placeholder="Cantidad a abonar"
 							type="number"
 						/>
-						<pre>
-							<code>{JSON.stringify(form.formState.errors, null, 2)}</code>
-						</pre>
 					</form>
 				</Form>
 
